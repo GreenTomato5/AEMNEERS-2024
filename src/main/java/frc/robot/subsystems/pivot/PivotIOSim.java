@@ -2,6 +2,7 @@ package frc.robot.subsystems.pivot;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
 
@@ -9,8 +10,14 @@ public class PivotIOSim implements PivotIO {
   // I guessed innacuratley, idk what half of this means fr
   private final SingleJointedArmSim sim =
       new SingleJointedArmSim(
-          DCMotor.getNEO(1), 10, SingleJointedArmSim.estimateMOI(0.7, 2.0), 0.5, -1, 20, true, 0.0);
-
+          DCMotor.getKrakenX60(1),
+          67.5, // gearing
+          0.192383865, // MOI
+          0.3, // arm length
+          Units.degreesToRadians(0), // min angle -- hard stop
+          Units.degreesToRadians(180), // max angle -- floor
+          false,
+          Units.degreesToRadians(0));
   private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
 
   private boolean closedLoop = false;

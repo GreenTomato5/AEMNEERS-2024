@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -37,7 +39,7 @@ public final class Constants {
 
   public static final class Pivot {
     // Radians
-    public static final double OUT = 0.7;
+    public static final double OUT = Units.degreesToRadians(160);
     public static final double IN = 0.0;
     public static final double THRESHOLD = 0.05;
   }
