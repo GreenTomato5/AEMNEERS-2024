@@ -9,8 +9,11 @@ import frc.robot.Constants;
 // google what it is
 
 public class SpinnerIOSim implements SpinnerIO {
-  // Took from other repo this is based on (idk what type of sim to use, y isnt this flywheel)
-  private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);
+  // Absolutley 0 idea what the correct values are other than num motors
+  private final DCMotorSim intakeSim = 
+  new DCMotorSim(
+    DCMotor.getFalcon500(1), 1, 0.01);
+
   // IN RPM!!!
   public double speedPoint = 0.0;
   private double appliedVolts = 0.0;
@@ -40,10 +43,6 @@ public class SpinnerIOSim implements SpinnerIO {
     intakeSim.setInputVoltage(feedbackVoltage);
   }
 
-  public void setSpeedPoint(double speedPoint) {
-    this.speedPoint = speedPoint;
-  }
-
   @Override
   public void setVoltage(double volts) {
     closedLoop = false;
@@ -61,10 +60,6 @@ public class SpinnerIOSim implements SpinnerIO {
   public boolean nearSpeedPoint() {
     return Math.abs(speedPoint - intakeSim.getAngularVelocityRPM() / 60)
         < Constants.Spinner.THRESHOLD;
-  }
-
-  public double getSpeedPoint() {
-    return speedPoint;
   }
 
   public void configurePID(double kP, double kI, double kD) {

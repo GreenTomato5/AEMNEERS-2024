@@ -19,6 +19,7 @@ public class Shooter extends SubsystemBase {
   public Shooter(ShooterIO io) {
     this.io = io;
 
+    //TODO: Tune ff and feedback controllers, these values are MADE UP
     switch (Constants.currentMode) {
       case REAL:
         io.configurePID(1.0, 0, 0);

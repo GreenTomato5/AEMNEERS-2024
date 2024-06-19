@@ -171,7 +171,7 @@ public class RobotContainer {
         .whileTrue(
             spinner
                 .setSpeedCommand(() -> Constants.Spinner.ON)
-                .alongWith(pivot.setPositionCommand(() -> 0.7)));
+                .alongWith(pivot.setPositionCommand(() -> Constants.Pivot.OUT)));
 
     // Shoot
     controller

@@ -26,7 +26,7 @@ public class Pivot extends SubsystemBase {
 
   public Pivot(PivotIO io) {
     this.io = io;
-
+    //TODO: Tune feedback controllers, these values are MADE UP
     switch (Constants.currentMode) {
       case REAL:
         io.configurePID(1.0, 0, 0);
@@ -35,7 +35,7 @@ public class Pivot extends SubsystemBase {
         io.configurePID(1.0, 0.0, 0.0);
         break;
       case SIM:
-        io.configurePID(1.5, 0.0, 0.1);
+        io.configurePID(3.0, 0.0, 0.1);
         break;
       default:
         break;

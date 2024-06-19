@@ -19,7 +19,7 @@ public class Spinner extends SubsystemBase {
   public Spinner(SpinnerIO io) {
     this.io = io;
 
-    // Nah tune these PID values bc i just took them from pivot
+    //TODO: Tune feedback controllers, these values are MADE UP
     switch (Constants.currentMode) {
       case REAL:
         io.configurePID(1.0, 0, 0);
@@ -62,10 +62,6 @@ public class Spinner extends SubsystemBase {
 
   public boolean atSetpoint() {
     return io.nearSpeedPoint();
-  }
-
-  public void setSpeedPoint(double speedPoint) {
-    io.setSpeedPoint(speedPoint);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
