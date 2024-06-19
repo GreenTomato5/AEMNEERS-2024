@@ -40,6 +40,14 @@ public class SpinnerIOTalonFX implements SpinnerIO {
         < Constants.Spinner.THRESHOLD;
   }
 
+  public double getSpeedPoint() {
+    return speedPoint;
+  }
+
+  public void setSpeedPoint(double speedPoint) {
+    this.speedPoint = speedPoint;
+  }
+
   @Override
   public void configurePID(double kP, double kI, double kD) {
     controller.setPID(kP, kI, kD);

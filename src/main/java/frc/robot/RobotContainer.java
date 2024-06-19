@@ -149,7 +149,7 @@ public class RobotContainer {
     pivot.setDefaultCommand(pivot.getDefaultCommand());
 
     // Lock Wheels
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.a().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero Gyro
     controller
@@ -163,7 +163,13 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Intake
-    controller.a().onTrue(Commands.runOnce(() -> ShootingCommands.intakeNote(spinner, pivot)));
+    controller
+        .x()
+        .whileTrue(
+            spinner
+                .setSpeedCommand(() -> Constants.Spinner.ON)
+                .alongWith(pivot.setPositionCommand(() -> Constants.Pivot.OUT))
+                .andThen(Commands.waitSeconds(1)));
 
     // Shoot
     controller.y().onTrue(Commands.runOnce(() -> ShootingCommands.shootSpeaker(shooter, spinner)));

@@ -57,11 +57,15 @@ public class Spinner extends SubsystemBase {
   }
 
   public Command getDefaultCommand() {
-    return setSpeedCommand(() -> 0.0);
+    return setSpeedCommand(() -> 0);
   }
 
   public boolean atSetpoint() {
     return io.nearSpeedPoint();
+  }
+
+  public void setSpeedPoint(double speedPoint) {
+    io.setSpeedPoint(speedPoint);
   }
 
   public void periodic() {

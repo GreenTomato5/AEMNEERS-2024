@@ -25,4 +25,15 @@ public class ShootingCommands {
         .until(() -> pivot.nearSetPoint())
         .andThen(Commands.waitSeconds(1));
   }
+
+  public static Command intakeNoteOddly(Spinner spinner, Pivot pivot) {
+    return Commands.run(
+        () -> {
+          spinner.setSpeedPoint(20);
+          //   if (spinner.atSetpoint()) {
+          //     spinner.setSpeedPoint(0);
+          //   }
+        },
+        spinner);
+  }
 }
