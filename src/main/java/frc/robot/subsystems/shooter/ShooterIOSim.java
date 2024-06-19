@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.robot.Constants;
 
 public class ShooterIOSim implements ShooterIO {
 
@@ -27,10 +28,9 @@ public class ShooterIOSim implements ShooterIO {
 
     sim.update(0.02);
 
-    inputs.shooterSpeed = sim.getAngularVelocityRPM()/60;
+    inputs.shooterSpeed = sim.getAngularVelocityRPM() / 60;
     inputs.shooterAppliedVolts = appliedVolts;
     inputs.shooterSpeedPoint = speedPoint;
-
   }
 
   @Override
@@ -45,7 +45,7 @@ public class ShooterIOSim implements ShooterIO {
     closedLoop = true;
     speedPoint = rps;
 
-    double feedbackVoltage = pid.calculate(sim.getAngularVelocityRPM()/60, rps);
+    double feedbackVoltage = pid.calculate(sim.getAngularVelocityRPM() / 60, rps);
     double feedforwardVoltage = ff.calculate(rps);
 
     sim.setInputVoltage(feedbackVoltage + feedforwardVoltage);
@@ -64,5 +64,9 @@ public class ShooterIOSim implements ShooterIO {
   @Override
   public void configureFeedForward(double kS, double kV, double kA) {
     ff = new SimpleMotorFeedforward(kS, kV, kA);
-  }    
+  }
+
+  public boolean nearSpeedPoint() {
+    return Math.abs(speedPoint - sim.getAngularVelocityRPM() / 60) < Constants.Spinner.THRESHOLD;
+  }
 }

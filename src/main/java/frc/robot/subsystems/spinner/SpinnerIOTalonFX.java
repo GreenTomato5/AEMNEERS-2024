@@ -2,6 +2,7 @@ package frc.robot.subsystems.spinner;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.Constants;
 
 public class SpinnerIOTalonFX implements SpinnerIO {
 
@@ -32,6 +33,11 @@ public class SpinnerIOTalonFX implements SpinnerIO {
 
   public void setVoltage(Double volts) {
     motor.setVoltage(speedPoint);
+  }
+
+  public boolean nearSpeedPoint() {
+    return Math.abs(speedPoint - motor.getVelocity().getValueAsDouble())
+        < Constants.Spinner.THRESHOLD;
   }
 
   @Override

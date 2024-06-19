@@ -32,4 +32,8 @@ public interface ShooterIO {
 
   /** Set ff constants */
   public default void configureFeedForward(double kS, double kV, double kA) {}
+
+  public default boolean nearSpeedPoint() {
+    return false;
+  }
 }

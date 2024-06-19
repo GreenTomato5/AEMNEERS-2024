@@ -3,6 +3,7 @@ package frc.robot.subsystems.spinner;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants;
 
 // At this point im just putting override everywhere where it doesent make an error, I should lowkey
 // google what it is
@@ -30,8 +31,13 @@ public class SpinnerIOSim implements SpinnerIO {
     inputs.wheelAppliedVolts = appliedVolts;
   }
 
-  public void setSpeed(double speed) {
+  public void setSpeed(double rps) {
     closedLoop = true;
+    speedPoint = rps;
+
+    double feedbackVoltage = pid.calculate(intakeSim.getAngularVelocityRPM() / 60, rps);
+
+    intakeSim.setInputVoltage(feedbackVoltage);
   }
 
   @Override
@@ -46,6 +52,11 @@ public class SpinnerIOSim implements SpinnerIO {
     closedLoop = false;
     appliedVolts = 0.0;
     setVoltage(0);
+  }
+
+  public boolean nearSpeedPoint() {
+    return Math.abs(speedPoint - intakeSim.getAngularVelocityRPM() / 60)
+        < Constants.Spinner.THRESHOLD;
   }
 
   public void configurePID(double kP, double kI, double kD) {

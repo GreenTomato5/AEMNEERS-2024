@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants;
 
 public class PivotIOSim implements PivotIO {
   // I guessed innacuratley, idk what half of this means fr
@@ -53,5 +54,9 @@ public class PivotIOSim implements PivotIO {
   @Override
   public void configurePID(double kP, double kI, double kD) {
     pid.setPID(kP, kI, kD);
+  }
+
+  public boolean nearSetPoint() {
+    return Math.abs(setPoint - sim.getAngleRads()) < Constants.Spinner.THRESHOLD;
   }
 }

@@ -22,7 +22,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -38,14 +38,18 @@ public final class Constants {
   public static final class Pivot {
     public static final double OUT = 100.0;
     public static final double IN = 0.0;
+    public static final double THRESHOLD = 0.1;
   }
 
   public static final class Spinner {
     public static final double ON = 0.5;
+    public static final double FEEDING = -0.5;
     public static final double BACKWARDS = -0.3;
+    public static final double THRESHOLD = 0.1;
   }
 
   public static final class Shooter {
     public static final double ON = 10;
+    public static final double THRESHOLD = 0.1;
   }
 }

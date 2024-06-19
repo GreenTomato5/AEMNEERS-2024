@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.Constants;
 
 public class PivotIOSparkMax implements PivotIO {
 
@@ -47,5 +48,9 @@ public class PivotIOSparkMax implements PivotIO {
   @Override
   public void configurePID(double kP, double kI, double kD) {
     pidController.setPID(kP, kI, kD);
+  }
+
+  public boolean nearSetPoint() {
+    return Math.abs(setPoint - encoder.getPosition()) < Constants.Pivot.THRESHOLD;
   }
 }

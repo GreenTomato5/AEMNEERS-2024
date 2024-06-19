@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import frc.robot.Constants;
 
 public class ShooterIOTalonFX implements ShooterIO {
 
@@ -29,10 +30,14 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public void setSpeed(double rps) {
     speedPoint = rps;
-    //Idk if this is how you use feed forward controllers, I think it is
+    // Idk if this is how you use feed forward controllers, I think it is
     double feedforward = feedForwardController.calculate(rps);
-    double left = feedbackController.calculate(leftMotor.getRotorVelocity().getValueAsDouble(), rps) + feedforward;
-    double right = feedbackController.calculate(rightMotor.getRotorVelocity().getValueAsDouble(), rps) + feedforward;
+    double left =
+        feedbackController.calculate(leftMotor.getRotorVelocity().getValueAsDouble(), rps)
+            + feedforward;
+    double right =
+        feedbackController.calculate(rightMotor.getRotorVelocity().getValueAsDouble(), rps)
+            + feedforward;
 
     leftMotor.setVoltage(left);
     rightMotor.setVoltage(right);
@@ -54,5 +59,12 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public void configureFeedForward(double kS, double kV, double kA) {
     feedForwardController = new SimpleMotorFeedforward(kS, kV, kA);
+  }
+
+  public boolean speedPoint() {
+    return Math.abs(speedPoint - leftMotor.getVelocity().getValueAsDouble())
+            < Constants.Spinner.THRESHOLD
+        && Math.abs(speedPoint - rightMotor.getVelocity().getValueAsDouble())
+            < Constants.Spinner.THRESHOLD;
   }
 }

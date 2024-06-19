@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShootingCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -34,6 +35,10 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotIO;
 import frc.robot.subsystems.pivot.PivotIOSim;
 import frc.robot.subsystems.pivot.PivotIOSparkMax;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.spinner.Spinner;
 import frc.robot.subsystems.spinner.SpinnerIO;
 import frc.robot.subsystems.spinner.SpinnerIOSim;
@@ -51,6 +56,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Pivot pivot;
   private final Spinner spinner;
+  private final Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -72,6 +78,7 @@ public class RobotContainer {
         // Idk what ID the pivot motor is :(
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
+        shooter = new Shooter(new ShooterIOTalonFX());
         break;
 
       case SIM:
@@ -85,6 +92,7 @@ public class RobotContainer {
                 new ModuleIOSim());
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());
+        shooter = new Shooter(new ShooterIOSim());
         break;
 
       default:
@@ -98,6 +106,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         pivot = new Pivot(new PivotIO() {});
         spinner = new Spinner(new SpinnerIO() {});
+        shooter = new Shooter(new ShooterIO() {});
         break;
     }
 
@@ -135,6 +144,9 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+    shooter.setDefaultCommand(shooter.getDefaultCommand());
+    spinner.setDefaultCommand(spinner.getDefaultCommand());
+    pivot.setDefaultCommand(pivot.getDefaultCommand());
 
     // Lock Wheels
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -149,6 +161,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    // Intake
+    controller.a().onTrue(Commands.runOnce(() -> ShootingCommands.intakeNote(spinner, pivot)));
+
+    // Shoot
+    controller.y().onTrue(Commands.runOnce(() -> ShootingCommands.shootSpeaker(shooter, spinner)));
   }
 
   /**

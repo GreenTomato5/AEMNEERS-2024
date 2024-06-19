@@ -63,6 +63,10 @@ public class Pivot extends SubsystemBase {
     return setPositionCommand(() -> Units.degreesToRadians(Constants.Pivot.IN));
   }
 
+  public boolean nearSetPoint() {
+    return io.nearSetPoint();
+  }
+
   @Override
   public void periodic() {
     io.updateInputs(inputs);

@@ -60,6 +60,10 @@ public class Spinner extends SubsystemBase {
     return setSpeedCommand(() -> 0.0);
   }
 
+  public boolean atSetpoint() {
+    return io.nearSpeedPoint();
+  }
+
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Spinner", inputs);
