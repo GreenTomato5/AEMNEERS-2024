@@ -30,4 +30,8 @@ public interface PivotIO {
   public default boolean nearSetPoint() {
     return false;
   }
+
+  public default double getPivotPosition() {
+    return 0.0;
+  }
 }

@@ -2,6 +2,9 @@ package frc.robot.subsystems.pivot;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -14,6 +17,10 @@ import org.littletonrobotics.junction.Logger;
 public class Pivot extends SubsystemBase {
 
   private final PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
+  private Mechanism2d intakePivot;
+  private MechanismRoot2d root;
+  private MechanismLigament2d rotatingLigament;
+
   SysIdRoutine sysId;
   PivotIO io;
 
@@ -34,6 +41,7 @@ public class Pivot extends SubsystemBase {
         break;
     }
 
+    setUp2dMechSim();
     // Using SysID is wild
     sysId =
         new SysIdRoutine(
@@ -74,8 +82,24 @@ public class Pivot extends SubsystemBase {
     return sysId.dynamic(direction);
   }
 
+  public void setUp2dMechSim() {
+    intakePivot = new Mechanism2d(10, 10);
+    root = intakePivot.getRoot("Root", 5, 5);
+
+    rotatingLigament = new MechanismLigament2d("RotatingLigament", 30, 0);
+    root.append(rotatingLigament);
+  }
+
+  public void update2dMechSim() {
+    // negative so it looks like the intake instead of the way the motor is turning if that makes
+    // senseP
+    rotatingLigament.setAngle(-Math.toDegrees(io.getPivotPosition()));
+    Logger.recordOutput("MyMechanism", intakePivot);
+  }
+
   @Override
   public void periodic() {
+    update2dMechSim();
     io.updateInputs(inputs);
     Logger.processInputs("Pivot", inputs);
     Logger.recordOutput(

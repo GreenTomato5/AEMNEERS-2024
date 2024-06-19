@@ -14,8 +14,8 @@ public class PivotIOSim implements PivotIO {
           67.5, // gearing
           0.192383865, // MOI
           0.3, // arm length
-          Units.degreesToRadians(0), // min angle -- hard stop
-          Units.degreesToRadians(180), // max angle -- floor
+          Units.degreesToRadians(0), // min angle -- floor
+          Units.degreesToRadians(180), // max angle -- hard stop
           false,
           Units.degreesToRadians(0));
   private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
@@ -66,6 +66,10 @@ public class PivotIOSim implements PivotIO {
   @Override
   public void configurePID(double kP, double kI, double kD) {
     pid.setPID(kP, kI, kD);
+  }
+
+  public double getPivotPosition() {
+    return sim.getAngleRads();
   }
 
   public boolean nearSetPoint() {

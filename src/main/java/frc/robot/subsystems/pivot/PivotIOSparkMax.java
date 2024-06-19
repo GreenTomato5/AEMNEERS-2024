@@ -41,6 +41,10 @@ public class PivotIOSparkMax implements PivotIO {
     motor.setVoltage(volts);
   }
 
+  public double getPivotPosition() {
+    return encoder.getPosition();
+  }
+
   @Override
   public void stop() {
     motor.stopMotor();
