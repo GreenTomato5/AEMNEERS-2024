@@ -23,7 +23,7 @@ public class SpinnerIOTalonFX implements SpinnerIO {
     }
 
     public void setSpeed(Double speed) {
-        motor.set(controller.calculate(motor.get(), speedPoint));
+        motor.set(controller.calculate(motor.getVelocity().getValueAsDouble(), speedPoint));
     }
 
     @Override

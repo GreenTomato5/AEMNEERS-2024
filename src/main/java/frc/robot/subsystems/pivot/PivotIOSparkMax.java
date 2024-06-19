@@ -1,7 +1,6 @@
 package frc.robot.subsystems.pivot;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -20,6 +19,7 @@ public class PivotIOSparkMax implements PivotIO {
         encoder = motor.getEncoder();
         pidController = new PIDController(0, 0, 0);
         motor.restoreFactoryDefaults();
+        encoder.setPositionConversionFactor(2 * Math.PI);
     }
 
     @Override
@@ -37,6 +37,7 @@ public class PivotIOSparkMax implements PivotIO {
 
     @Override
     public void setVoltage(double volts) {
+        // Open loop for sysID
         motor.setVoltage(volts);
     }
 

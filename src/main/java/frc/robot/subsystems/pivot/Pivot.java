@@ -2,6 +2,7 @@ package frc.robot.subsystems.pivot;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +12,7 @@ import frc.robot.Constants;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 // Subsystem base automatically runs periodic, too scared to put stuff in robot.java
 public class Pivot extends SubsystemBase {
@@ -35,7 +37,7 @@ public class Pivot extends SubsystemBase {
                 break;
             default:
                 break;
-            }
+        }
 
         // Using SysID is wild
         sysId =
@@ -52,15 +54,19 @@ public class Pivot extends SubsystemBase {
         io.setVoltage(volts);
     }
 
+    //IN RADIANS!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void setPosition(Double position) {
         io.setPosition(position);
     }
 
-    public Command getDefaultCommand() {
-        // Ill put something here when I wana work on it fr fr
-        return new PrintCommand("not doing allat");
+    public Command setPositionCommand(DoubleSupplier posRad) {
+        return run(() -> setPosition(posRad.getAsDouble()));
     }
 
+    public Command getDefaultCommand() {
+        return setPositionCommand(() -> Units.degreesToRadians(Constants.Pivot.IN));
+    }
+    
     @Override
     public void periodic() {
         io.updateInputs(inputs);

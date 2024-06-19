@@ -37,12 +37,12 @@ public final class Constants {
     REPLAY
   }
   public final static class Pivot {
-    public static final double out = 100.0;
-    public static final double in = 0.0;
+    public static final double OUT = 100.0;
+    public static final double IN = 0.0;
   }
 
   public final static class Spinner {
-    public static final double on = 0.5;
-    public static final double out = -0.3;
+    public static final double ON = 0.5;
+    public static final double BACKWARDS = -0.3;
   }
 }
