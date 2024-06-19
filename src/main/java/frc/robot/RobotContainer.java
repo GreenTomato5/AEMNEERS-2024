@@ -34,9 +34,11 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotIO;
 import frc.robot.subsystems.pivot.PivotIOSim;
 import frc.robot.subsystems.pivot.PivotIOSparkMax;
-
+import frc.robot.subsystems.spinner.Spinner;
+import frc.robot.subsystems.spinner.SpinnerIO;
+import frc.robot.subsystems.spinner.SpinnerIOSim;
+import frc.robot.subsystems.spinner.SpinnerIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,6 +50,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Pivot pivot;
+  private final Spinner spinner;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -67,7 +70,8 @@ public class RobotContainer {
                 new ModuleIOTalonFX(2),
                 new ModuleIOTalonFX(3));
         // Idk what ID the pivot motor is :(
-        pivot = new Pivot(new PivotIOSparkMax(1));
+        pivot = new Pivot(new PivotIOSparkMax());
+        spinner = new Spinner(new SpinnerIOTalonFX());
         break;
 
       case SIM:
@@ -80,6 +84,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim());
         pivot = new Pivot(new PivotIOSim());
+        spinner = new Spinner(new SpinnerIOSim());
         break;
 
       default:
@@ -92,6 +97,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         pivot = new Pivot(new PivotIO() {});
+        spinner = new Spinner(new SpinnerIO() {});
         break;
     }
 
