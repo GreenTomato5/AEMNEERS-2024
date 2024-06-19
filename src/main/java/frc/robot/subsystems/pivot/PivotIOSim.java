@@ -36,7 +36,8 @@ public class PivotIOSim implements PivotIO {
   @Override
   public void setPosition(double positionRad) {
     closedLoop = true;
-    setVoltage(pid.calculate(sim.getAngleRads(), setPoint));
+    setPoint = positionRad;
+    sim.setInputVoltage(pid.calculate(sim.getAngleRads(), setPoint));
   }
 
   @Override
