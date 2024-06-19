@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ShootingCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -172,7 +171,16 @@ public class RobotContainer {
                 .andThen(Commands.waitSeconds(1)));
 
     // Shoot
-    controller.y().onTrue(Commands.runOnce(() -> ShootingCommands.shootSpeaker(shooter, spinner)));
+    controller
+        .y()
+        .whileTrue(
+            shooter
+                .setSpeedCommand(() -> Constants.Shooter.ON)
+                .until(() -> shooter.nearSpeedPoint())
+                .andThen(
+                    shooter
+                        .setSpeedCommand(() -> Constants.Shooter.ON)
+                        .alongWith(spinner.setSpeedCommand(() -> Constants.Spinner.FEEDING))));
   }
 
   /**
