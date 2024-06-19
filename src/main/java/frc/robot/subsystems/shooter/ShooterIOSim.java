@@ -9,7 +9,7 @@ import frc.robot.Constants;
 
 public class ShooterIOSim implements ShooterIO {
 
-  private FlywheelSim sim = new FlywheelSim(DCMotor.getNEO(1), 1.5, 0.004);
+  private FlywheelSim sim = new FlywheelSim(DCMotor.getFalcon500(2), 1.5, 0.004);
   private PIDController pid = new PIDController(0.0, 0.0, 0.0);
   private SimpleMotorFeedforward ff;
 
