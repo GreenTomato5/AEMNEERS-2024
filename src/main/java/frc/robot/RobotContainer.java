@@ -124,6 +124,10 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    // Intake PIDs
+    autoChooser.addOption(
+        "Shooter SysID", shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -167,8 +171,7 @@ public class RobotContainer {
         .whileTrue(
             spinner
                 .setSpeedCommand(() -> Constants.Spinner.ON)
-                .alongWith(pivot.setPositionCommand(() -> Constants.Pivot.OUT))
-                .andThen(Commands.waitSeconds(1)));
+                .alongWith(pivot.setPositionCommand(() -> 0.7)));
 
     // Shoot
     controller

@@ -9,6 +9,7 @@ public interface PivotIO {
     public double pivotCurrentPosition = 0.0;
     public double pivotAppliedVolts = 0.0;
     public double pivotSetpoint = 0.0;
+    public double pivotVelocity = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

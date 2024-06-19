@@ -26,7 +26,7 @@ public class SpinnerIOSim implements SpinnerIO {
 
     intakeSim.update(0.02);
 
-    inputs.wheelSpeed = intakeSim.getAngularVelocityRPM();
+    inputs.wheelSpeed = intakeSim.getAngularVelocityRPM() / 60;
     inputs.wheelSpeedPoint = speedPoint;
     inputs.wheelAppliedVolts = appliedVolts;
   }
@@ -34,8 +34,8 @@ public class SpinnerIOSim implements SpinnerIO {
   public void setSpeed(double rps) {
     closedLoop = true;
     speedPoint = rps;
-
     double feedbackVoltage = pid.calculate(intakeSim.getAngularVelocityRPM() / 60, rps);
+    appliedVolts = feedbackVoltage;
 
     intakeSim.setInputVoltage(feedbackVoltage);
   }

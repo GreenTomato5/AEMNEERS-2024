@@ -26,6 +26,7 @@ public class PivotIOSparkMax implements PivotIO {
     inputs.pivotCurrentPosition = encoder.getPosition();
     inputs.pivotAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
     inputs.pivotSetpoint = setPoint;
+    inputs.pivotVelocity = motor.getEncoder().getVelocity();
   }
 
   @Override

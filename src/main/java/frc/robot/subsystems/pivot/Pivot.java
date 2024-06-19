@@ -2,7 +2,6 @@ package frc.robot.subsystems.pivot;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -29,7 +28,7 @@ public class Pivot extends SubsystemBase {
         io.configurePID(1.0, 0.0, 0.0);
         break;
       case SIM:
-        io.configurePID(0.5, 0.0, 0.0);
+        io.configurePID(1.5, 0.0, 0.1);
         break;
       default:
         break;
@@ -60,11 +59,19 @@ public class Pivot extends SubsystemBase {
   }
 
   public Command getDefaultCommand() {
-    return setPositionCommand(() -> Units.degreesToRadians(Constants.Pivot.IN));
+    return setPositionCommand(() -> 0.0);
   }
 
   public boolean nearSetPoint() {
     return io.nearSetPoint();
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
   @Override

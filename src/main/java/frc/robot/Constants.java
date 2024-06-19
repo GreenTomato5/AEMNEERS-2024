@@ -36,14 +36,15 @@ public final class Constants {
   }
 
   public static final class Pivot {
-    public static final double OUT = 100.0;
+    // Radians
+    public static final double OUT = 0.7;
     public static final double IN = 0.0;
-    public static final double THRESHOLD = 0.1;
+    public static final double THRESHOLD = 0.05;
   }
 
   public static final class Spinner {
-    public static final double ON = 0.5;
-    public static final double FEEDING = -0.5;
+    public static final double ON = 0.8;
+    public static final double FEEDING = -1;
     public static final double BACKWARDS = -0.3;
     public static final double THRESHOLD = 0.1;
   }

@@ -28,7 +28,7 @@ public class Spinner extends SubsystemBase {
         io.configurePID(1.0, 0.0, 0.0);
         break;
       case SIM:
-        io.configurePID(0.5, 0.0, 0.0);
+        io.configurePID(1.0, 0.0, 0.0);
         break;
       default:
         break;
@@ -66,6 +66,14 @@ public class Spinner extends SubsystemBase {
 
   public void setSpeedPoint(double speedPoint) {
     io.setSpeedPoint(speedPoint);
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
   public void periodic() {

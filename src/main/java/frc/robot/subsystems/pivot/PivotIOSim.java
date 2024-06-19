@@ -9,7 +9,7 @@ public class PivotIOSim implements PivotIO {
   // I guessed innacuratley, idk what half of this means fr
   private final SingleJointedArmSim sim =
       new SingleJointedArmSim(
-          DCMotor.getNEO(1), 100, SingleJointedArmSim.estimateMOI(0.7, 2.0), 0.5, 0, 20, true, 0.0);
+          DCMotor.getNEO(1), 10, SingleJointedArmSim.estimateMOI(0.7, 2.0), 0.5, -1, 20, true, 0.0);
 
   private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
 
@@ -31,13 +31,17 @@ public class PivotIOSim implements PivotIO {
     inputs.pivotCurrentPosition = sim.getAngleRads();
     inputs.pivotAppliedVolts = appliedVolts;
     inputs.pivotSetpoint = setPoint;
+    inputs.pivotVelocity = sim.getVelocityRadPerSec();
   }
 
   @Override
   public void setPosition(double positionRad) {
     closedLoop = true;
     setPoint = positionRad;
-    sim.setInputVoltage(pid.calculate(sim.getAngleRads(), setPoint));
+    double feedbackVoltage = pid.calculate(sim.getAngleRads(), positionRad);
+    appliedVolts = feedbackVoltage;
+
+    sim.setInputVoltage(feedbackVoltage);
   }
 
   @Override

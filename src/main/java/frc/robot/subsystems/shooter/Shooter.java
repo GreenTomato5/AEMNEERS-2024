@@ -66,6 +66,15 @@ public class Shooter extends SubsystemBase {
     return io.nearSpeedPoint();
   }
 
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  /** Returns a command to run a dynamic test in the specified direction. */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
+  }
+
   @Override
   public void periodic() {
     io.updateInputs(inputs);
