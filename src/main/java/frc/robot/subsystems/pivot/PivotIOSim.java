@@ -1,6 +1,5 @@
 package frc.robot.subsystems.pivot;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -21,14 +20,16 @@ public class PivotIOSim implements PivotIO {
     private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
 
     private boolean closedLoop = false;
-    private double ffVolts = 0.0;
     private double appliedVolts = 0.0;
+    // IN RADIANTS! (I think)
+    private double setPoint = 0.0;
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
         if (closedLoop) {
+            // Need this bc of L sysID that uses open loop
             appliedVolts =
-                MathUtil.clamp(pid.calculate(sim.getAngleRads()) + ffVolts, -12.0, 12.0);
+                pid.calculate(sim.getAngleRads(), setPoint);
             sim.setInputVoltage(appliedVolts);
         }
 
@@ -36,13 +37,13 @@ public class PivotIOSim implements PivotIO {
 
         inputs.pivotCurrentPosition = sim.getAngleRads();
         inputs.pivotAppliedVolts = appliedVolts;
-        inputs.pivotSetpoint = pid.getSetpoint();
+        inputs.pivotSetpoint = setPoint;
     }
 
     @Override
     public void setPosition(double positionRad) {
         closedLoop = true;
-        pid.setSetpoint(positionRad);
+        setVoltage(pid.calculate(sim.getAngleRads(), setPoint));
     }
 
     @Override

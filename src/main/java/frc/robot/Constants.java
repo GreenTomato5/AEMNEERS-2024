@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -33,5 +35,14 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+  public final static class Pivot {
+    public static final double out = 100.0;
+    public static final double in = 0.0;
+  }
+
+  public final static class Spinner {
+    public static final double on = 0.5;
+    public static final double out = -0.3;
   }
 }
