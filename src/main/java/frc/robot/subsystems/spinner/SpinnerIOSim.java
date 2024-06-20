@@ -5,11 +5,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 
-// At this point im just putting override everywhere where it doesent make an error, I should lowkey
-// google what it is
-
 public class SpinnerIOSim implements SpinnerIO {
-  // Absolutley 0 idea what the correct values are other than num motors
+  // TODO: Absolutley 0 idea what the correct values are other than num motors
   private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);
 
   // IN RPM!!!
