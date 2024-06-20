@@ -26,7 +26,7 @@ public class Pivot extends SubsystemBase {
 
   public Pivot(PivotIO io) {
     this.io = io;
-    //TODO: Tune feedback controllers, these values are MADE UP
+    // TODO: Tune feedback controllers, these values are MADE UP
     switch (Constants.currentMode) {
       case REAL:
         io.configurePID(1.0, 0, 0);
@@ -86,15 +86,16 @@ public class Pivot extends SubsystemBase {
     intakePivot = new Mechanism2d(10, 10);
     root = intakePivot.getRoot("Root", 5, 5);
 
-    rotatingLigament = new MechanismLigament2d("RotatingLigament", 30, 0);
+    rotatingLigament = new MechanismLigament2d("RotatingLigament", 7, 0);
     root.append(rotatingLigament);
   }
 
   public void update2dMechSim() {
     // negative so it looks like the intake instead of the way the motor is turning if that makes
     // senseP
-    rotatingLigament.setAngle(-Math.toDegrees(io.getPivotPosition()));
-    Logger.recordOutput("MyMechanism", intakePivot);
+    rotatingLigament.setAngle(
+        -Math.toDegrees(io.getPivotPosition()) - Math.toDegrees(Constants.Pivot.SIMOFFSET));
+    Logger.recordOutput("Intake Pivot Mechanism", intakePivot);
   }
 
   @Override

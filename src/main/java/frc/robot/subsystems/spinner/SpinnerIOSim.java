@@ -10,9 +10,7 @@ import frc.robot.Constants;
 
 public class SpinnerIOSim implements SpinnerIO {
   // Absolutley 0 idea what the correct values are other than num motors
-  private final DCMotorSim intakeSim = 
-  new DCMotorSim(
-    DCMotor.getFalcon500(1), 1, 0.01);
+  private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);
 
   // IN RPM!!!
   public double speedPoint = 0.0;
