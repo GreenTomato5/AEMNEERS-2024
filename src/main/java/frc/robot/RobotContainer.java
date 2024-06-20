@@ -141,14 +141,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Default Commands
-    // TODO: Find out why drive doesent turn, likley because the io abstraction for the gyro is just
-    // "GyroIO" for sim
+  
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getLeftTriggerAxis()));
     shooter.setDefaultCommand(shooter.getDefaultCommand());
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());

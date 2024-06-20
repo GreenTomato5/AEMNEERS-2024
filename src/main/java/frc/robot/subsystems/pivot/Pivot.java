@@ -82,6 +82,8 @@ public class Pivot extends SubsystemBase {
     return sysId.dynamic(direction);
   }
 
+  // TODO: Ok so do this but for a 3d mech sim, see advantage scope docs to
+  // understand
   public void setUp2dMechSim() {
     intakePivot = new Mechanism2d(10, 10);
     root = intakePivot.getRoot("Root", 5, 5);
@@ -91,7 +93,8 @@ public class Pivot extends SubsystemBase {
   }
 
   public void update2dMechSim() {
-    // negative so it looks like the intake instead of the way the motor is turning if that makes
+    // negative so it looks like the intake instead of the way the motor is turning
+    // if that makes
     // senseP
     rotatingLigament.setAngle(
         -Math.toDegrees(io.getPivotPosition()) - Math.toDegrees(Constants.Pivot.SIMOFFSET));
