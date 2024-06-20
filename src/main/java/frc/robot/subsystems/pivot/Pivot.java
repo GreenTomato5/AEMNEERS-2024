@@ -82,6 +82,8 @@ public class Pivot extends SubsystemBase {
     return sysId.dynamic(direction);
   }
 
+
+  // TODO: Ok so do this but for a 3d mech sim, see advantage scope docs to understand
   public void setUp2dMechSim() {
     intakePivot = new Mechanism2d(10, 10);
     root = intakePivot.getRoot("Root", 5, 5);
