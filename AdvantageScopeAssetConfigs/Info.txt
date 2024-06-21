@@ -1,0 +1,3 @@
+Download this years cad along with the intake mechanism seprate from it as a STEP file
+and then convent it to a GLD file and put it in the appropriate advantage scope folder.
+Additionally put the config file in that folder.
