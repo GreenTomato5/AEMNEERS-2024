@@ -39,7 +39,7 @@ public final class Constants {
 
   public static final class Pivot {
     // Radians
-    public static final double OUT = Units.degreesToRadians(160);
+    public static final double OUT = Units.degreesToRadians(180);
     public static final double IN = 0.0;
     public static final double THRESHOLD = 0.05;
     public static final double SIMOFFSET = Units.degreesToRadians(-125);

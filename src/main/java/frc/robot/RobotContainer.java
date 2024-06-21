@@ -147,9 +147,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getLeftTriggerAxis()));
     shooter.setDefaultCommand(shooter.getDefaultCommand());
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());
