@@ -11,24 +11,19 @@ public interface SpinnerIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(SpinnerIOInputs inputs) {
-  }
+  public default void updateInputs(SpinnerIOInputs inputs) {}
 
   /** Sets the angle of the intake, in radians. */
-  public default void setSpeed(double speed) {
-  }
+  public default void setSpeed(double speed) {}
 
   /** Run open loop at the specified voltage. */
-  public default void setVoltage(double volts) {
-  }
+  public default void setVoltage(double volts) {}
 
   /** Stop in open loop. */
-  public default void stop() {
-  }
+  public default void stop() {}
 
   /** Set velocity PID constants. */
-  public default void configurePID(double kP, double kI, double kD) {
-  }
+  public default void configurePID(double kP, double kI, double kD) {}
 
   public default boolean nearSpeedPoint() {
     return false;

@@ -151,7 +151,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Default Commands
-  
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -199,10 +199,10 @@ public class RobotContainer {
 
     // Climb
 
-    backupController.
-        y().
-        whileTrue(
-          climber.setPositionCommand(() -> Constants.Climber.UP, () -> Constants.Climber.UP));
+    backupController
+        .y()
+        .whileTrue(
+            climber.setPositionCommand(() -> Constants.Climber.UP, () -> Constants.Climber.UP));
   }
 
   /**
