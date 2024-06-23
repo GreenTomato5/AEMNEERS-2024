@@ -9,94 +9,90 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.Constants;
 
 public class AmpIOReal implements AmpIO {
-
-    private final CANSparkMax motor;
-    private final RelativeEncoder encoder;
-    private final PIDController pidController;
+    
     public double setPoint = 0.0;
-    private final TalonFX wheelsMotor = new TalonFX(8);
-    private PIDController feedbackController;
-    private SimpleMotorFeedforward feedForwardController;
     public double speedPoint = 0.0;
 
+    private final CANSparkMax leftPivot;
+    private final CANSparkMax rightPivot;
+    private final TalonFX spinnerMotor;
+
+    private RelativeEncoder leftEncoder;
+    private RelativeEncoder rightEncoder;
+
+    private PIDController spinnerController;
+    private PIDController pivotController;
+
     public AmpIOReal() {
-        motor = new CANSparkMax(1, MotorType.kBrushless);
-        encoder = motor.getEncoder();
-        pidController = new PIDController(0, 0, 0);
-        motor.restoreFactoryDefaults();
-        encoder.setPositionConversionFactor(2 * Math.PI);
-        wheelsMotor.setInverted(false);
-        feedbackController = new PIDController(0, 0, 0);
+        leftPivot = new CANSparkMax(1, MotorType.kBrushless);
+        rightPivot = new CANSparkMax(0, MotorType.kBrushless);
+        spinnerMotor = new TalonFX(8);
+
+        leftEncoder = leftPivot.getEncoder();
+        rightEncoder = rightPivot.getEncoder();
+
+        leftPivot.setInverted(false);
+        rightPivot.setInverted(true);
+
+        pivotController = new PIDController(0, 0, 0);
+        spinnerController = new PIDController(0, 0, 0);
+
+        leftEncoder.setPositionConversionFactor(2 * Math.PI);
+        rightEncoder.setPositionConversionFactor(2 * Math.PI);
     }
 
     @Override
     public void updateInputs(AmpIOInputs inputs) {
-        inputs.ampBarCurrentPosition = encoder.getPosition();
-        inputs.ampBarAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
-        inputs.ampBarSetpoint = setPoint;
-        inputs.ampBarVelocity = motor.getEncoder().getVelocity();
-        inputs.ampShooterSpeedPoint = speedPoint;
-        inputs.ampBarAppliedVolts = wheelsMotor.getMotorVoltage().getValueAsDouble();
-        inputs.ampShooterVelocity = wheelsMotor.getVelocity().getValueAsDouble();
+        inputs.leftPivotCurrentPosition = leftEncoder.getPosition();
+        inputs.rightPivotCurrentPosition = rightEncoder.getPosition();
+        inputs.leftPivotAppliedVolts = leftPivot.getAppliedOutput() * leftPivot.getBusVoltage();
+        inputs.rightPivotAppliedVolts = rightPivot.getAppliedOutput() * rightPivot.getBusVoltage();
+        inputs.leftPivotSetpoint = setPoint;
+        inputs.rightPivotSetpoint = setPoint;
+
+        inputs.spinnerAppliedVolts = speedPoint;
+        inputs.spinnerSpeedPoint = spinnerMotor.getMotorVoltage().getValueAsDouble();
+        inputs.spinnerVelocity = spinnerMotor.getVelocity().getValueAsDouble();
 
     }
 
-    public void setSpeed(double rps) {
-        speedPoint = rps;
-        double feedforward = feedForwardController.calculate(rps);
-        double volts = feedbackController.calculate(wheelsMotor.getRotorVelocity().getValueAsDouble(), rps)
-                + feedforward;
+    // Pivot Stuff
+    public void setPivotPosition(double positionRad) {
+        setPoint = positionRad;
+        leftPivot.set(pivotController.calculate(leftEncoder.getPosition(), positionRad));
+        rightPivot.set(pivotController.calculate(rightEncoder.getPosition(), positionRad));
+    }
 
-        wheelsMotor.setVoltage(volts);
+    public void setPivotVoltage(double volts) {
+        leftPivot.setVoltage(volts);
+        rightPivot.setVoltage(volts);
+    }
+  
+    public void stopPivot() {
+        leftPivot.stopMotor();
+        rightPivot.stopMotor();
+    }
+  
+    public void configurePivotPID(double kP, double kI, double kD) {
+        pivotController.setPID(kP, kI, kD);
+    }
+  
+    //Spinner Stuff
+
+    public void setSpinnerSpeed(double rps) {
+        speedPoint = rps;
+        spinnerMotor.set(spinnerController.calculate(spinnerMotor.getRotorVelocity().getValueAsDouble(), rps));
     }
 
     public void setSpinnerVoltage(double volts) {
-        wheelsMotor.setVoltage(volts);
+        spinnerMotor.setVoltage(volts);
     }
-
+  
     public void stopSpinner() {
-        wheelsMotor.stopMotor();
+        spinnerMotor.stopMotor();
     }
-
+  
     public void configureSpinnerPID(double kP, double kI, double kD) {
-        feedbackController.setPID(kP, kI, kD);
-    }
-
-    public void configureFeedForward(double kS, double kV, double kA) {
-        feedForwardController = new SimpleMotorFeedforward(kS, kV, kA);
-    }
-
-    public boolean speedPoint() {
-        return Math.abs(speedPoint - wheelsMotor.getVelocity().getValueAsDouble()) < Constants.Spinner.THRESHOLD;
-    }
-
-    @Override
-    public void setPosition(double positionRad) {
-        setPoint = positionRad;
-        motor.setVoltage(pidController.calculate(encoder.getPosition(), setPoint));
-    }
-
-    @Override
-    public void setVoltage(double volts) {
-        // Open loop for sysID
-        motor.setVoltage(volts);
-    }
-
-    public double getPivotPosition() {
-        return encoder.getPosition();
-    }
-
-    @Override
-    public void stop() {
-        motor.stopMotor();
-    }
-
-    @Override
-    public void configurePID(double kP, double kI, double kD) {
-        pidController.setPID(kP, kI, kD);
-    }
-
-    public boolean nearSetPoint() {
-        return Math.abs(setPoint - encoder.getPosition()) < Constants.Pivot.THRESHOLD;
+        spinnerController.setPID(kP, kI, kD);
     }
 }

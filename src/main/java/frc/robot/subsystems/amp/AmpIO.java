@@ -6,9 +6,12 @@ public interface AmpIO {
 
   @AutoLog
   public static class AmpIOInputs {
-    public double pivotCurrentPosition = 0.0;
-    public double pivotAppliedVolts = 0.0;
-    public double pivotSetpoint = 0.0;
+    public double rightPivotCurrentPosition = 0.0;
+    public double rightPivotAppliedVolts = 0.0;
+    public double rightPivotSetpoint = 0.0;
+    public double leftPivotCurrentPosition = 0.0;
+    public double leftPivotAppliedVolts = 0.0;
+    public double leftPivotSetpoint = 0.0;
     public double spinnerVelocity = 0.0;
     public double spinnerSpeedPoint = 0.0;
     public double spinnerAppliedVolts = 0.0;
@@ -16,7 +19,6 @@ public interface AmpIO {
   
   /** Updates the set of loggable inputs. */
   public default void updateInputs(AmpIOInputs inputs) {}
-
 
   // Pivot Stuff
   public default void setPivotPosition(double positionRad) {}
