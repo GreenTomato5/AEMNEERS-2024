@@ -1,140 +1,89 @@
 package frc.robot.subsystems.amp;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants;
 
 public class AmpIOSim implements AmpIO {
-  private final SingleJointedArmSim sim =
-      new SingleJointedArmSim(
-          DCMotor.getKrakenX60(1),
-          67.5, // gearing
-          0.192383865, // MOI
-          0.3, // arm length
-          Units.degreesToRadians(0), // min angle -- floor
-          Units.degreesToRadians(180), // max angle -- hard stop
-          false,
-          Units.degreesToRadians(0));
-  private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
+	// Literally just the intake values LOL
+	private final SingleJointedArmSim pivotSim = new SingleJointedArmSim(
+			DCMotor.getNEO(2),
+			67.5, 
+			0.192383865,
+			0.3, 
+			Units.degreesToRadians(0),
+			Units.degreesToRadians(180),
+			false,
+			Units.degreesToRadians(0));
+	//These values are more wrong than you can imagine
+	private FlywheelSim spinnerSim = new FlywheelSim(DCMotor.getKrakenX60(1), 1.5, 0.004);
 
-  private FlywheelSim spinnerSim = new FlywheelSim(DCMotor.getFalcon500(2), 1.5, 0.004);
-  private PIDController spinnerPid = new PIDController(0.0, 0.0, 0.0);
-  private SimpleMotorFeedforward ff;
+	private PIDController pivotController = new PIDController(0.0, 0.0, 0.0);
+	private PIDController spinnerController = new PIDController(0.0, 0.0, 0.0);
 
-  private boolean closedLoop = false;
-  private double appliedVolts = 0.0;
-  public double setPoint = 0.0;
+	private double pivotAppliedVolts = 0.0;
+	private double spinnerAppliedVolts = 0.0;
 
-  private boolean closedSpinnerLoop = false;
-  private double ffVolts = 0.0;
-  private double appliedSpinnerVolts = 0.0;
-  public double speedPoint = 0.0;
+	public double setPoint = 0.0;
+	public double speedPoint = 0.0;
 
-  @Override
-  public void updateInputs(AmpIOInputs inputs) {
-    if (closedLoop) {
-      // Need this bc of L sysID that uses open loop
-      appliedVolts = pid.calculate(sim.getAngleRads(), setPoint);
-      sim.setInputVoltage(appliedVolts);
-    }
+	public void updateInputs(AmpIOInputs inputs) {
+		inputs.leftPivotCurrentPosition = pivotSim.getAngleRads();
+        inputs.rightPivotCurrentPosition = pivotSim.getAngleRads();
+        inputs.leftPivotAppliedVolts = pivotAppliedVolts;
+        inputs.rightPivotAppliedVolts = pivotAppliedVolts;
+        inputs.leftPivotSetpoint = setPoint;
+        inputs.rightPivotSetpoint = setPoint;
 
-    if (closedSpinnerLoop) {
-      appliedVolts =
-          MathUtil.clamp(spinnerPid.calculate(spinnerSim.getAngularVelocityRadPerSec()) + ffVolts, -12.0, 12.0);
-      spinnerSim.setInputVoltage(appliedSpinnerVolts);
-    }
+        inputs.spinnerAppliedVolts = spinnerAppliedVolts;
+        inputs.spinnerSpeedPoint = speedPoint;
+        inputs.spinnerVelocity = spinnerSim.getAngularVelocityRPM()/60;
 
-    sim.update(0.02);
+		pivotSim.update(0.02);
+		spinnerSim.update(0.02);
+	}
 
-    inputs.ampShooterVelocity = spinnerSim.getAngularVelocityRPM() / 60;
-    inputs.ampShooterVoltage = appliedSpinnerVolts;
-    inputs.ampShooterSpeedPoint = speedPoint;
+	// Pivot Stuff
+
+	public void setPivotPosition(double positionRad) {
+		pivotAppliedVolts = pivotController.calculate(pivotSim.getAngleRads(), positionRad);
+		pivotSim.setInputVoltage(pivotAppliedVolts);
+	}
+
+	public void setPivotVoltage(double volts) {
+		pivotAppliedVolts = 0;
+		pivotSim.setInputVoltage(volts);
+	}
   
-
-    sim.update(0.02);
-
-    inputs.ampBarCurrentPosition = sim.getAngleRads();
-    inputs.ampBarAppliedVolts = appliedVolts;
-    inputs.ampBarSetpoint = setPoint;
-    inputs.ampBarVelocity = sim.getVelocityRadPerSec();
-    }
-
-    @Override
-    public void setSpinnerVoltage(double volts) {
-      closedSpinnerLoop = false;
-      appliedSpinnerVolts = volts;
-      spinnerSim.setInputVoltage(volts);
-    }
+	public void stopPivot() {
+		pivotAppliedVolts = 0;
+		pivotSim.setInputVoltage(0);
+	}
   
-    @Override
-    public void setSpeed(double rps) {
-      closedSpinnerLoop = true;
-      speedPoint = rps;
-  
-      double feedbackVoltage = spinnerPid.calculate(spinnerSim.getAngularVelocityRPM() / 60, rps);
-      double feedforwardVoltage = ff.calculate(rps);
-  
-      spinnerSim.setInputVoltage(feedbackVoltage + feedforwardVoltage);
-    }
-  
-    @Override
-    public void stopSpinner() {
-      setSpinnerVoltage(0.0);
-    }
-  
-    @Override
-    public void configureSpinnerPID(double kP, double kI, double kD) {
-      spinnerPid.setPID(kP, kI, kD);
-    }
-  
-    @Override
-    public void configureFeedForward(double kS, double kV, double kA) {
-      ff = new SimpleMotorFeedforward(kS, kV, kA);
-    }
-  
-    public boolean nearSpeedPoint() {
-      return Math.abs(speedPoint - spinnerSim.getAngularVelocityRPM() / 60) < Constants.Spinner.THRESHOLD;
-    }
-  
+	public void configurePivotPID(double kP, double kI, double kD) {
+		pivotController.setPID(kP, kI, kD);
+	}
 
-  @Override
-  public void setPosition(double positionRad) {
-    closedLoop = true;
-    setPoint = positionRad;
-    double feedbackVoltage = pid.calculate(sim.getAngleRads(), positionRad);
-    appliedVolts = feedbackVoltage;
+	// Spinner Stuff
+	public void setSpinnerSpeed(double rps) {
+		spinnerAppliedVolts = spinnerController.calculate(spinnerSim.getAngularVelocityRPM()/60, rps);
+		spinnerSim.setInputVoltage(spinnerAppliedVolts);
+	}
 
-    sim.setInputVoltage(feedbackVoltage);
-  }
+	public void setSpinnerVoltage(double volts) {
+		spinnerAppliedVolts = volts;
+		spinnerSim.setInputVoltage(volts);
+	}
 
-  @Override
-  public void setVoltage(double volts) {
-    closedLoop = false;
-    appliedVolts = volts;
-    sim.setInputVoltage(volts);
-  }
+	public void stopSpinner() {
+		spinnerAppliedVolts = 0;
+		spinnerSim.setInputVoltage(0);
+	}
 
-  @Override
-  public void stop() {
-    setVoltage(0.0);
-  }
+	public void configureSpinnerPID(double kP, double kI, double kD) {
+		spinnerController.setPID(kP, kI, kD);
+	}
 
-  @Override
-  public void configurePID(double kP, double kI, double kD) {
-    pid.setPID(kP, kI, kD);
-  }
-
-  public double getPivotPosition() {
-    return sim.getAngleRads();
-  }
-
-  public boolean nearSetPoint() {
-    return Math.abs(setPoint - sim.getAngleRads()) < Constants.Spinner.THRESHOLD;
-  }
-  
 }

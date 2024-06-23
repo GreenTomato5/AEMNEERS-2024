@@ -5,8 +5,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import frc.robot.Constants;
 
 public class AmpIOReal implements AmpIO {
     
@@ -53,7 +51,6 @@ public class AmpIOReal implements AmpIO {
         inputs.spinnerAppliedVolts = speedPoint;
         inputs.spinnerSpeedPoint = spinnerMotor.getMotorVoltage().getValueAsDouble();
         inputs.spinnerVelocity = spinnerMotor.getVelocity().getValueAsDouble();
-
     }
 
     // Pivot Stuff
