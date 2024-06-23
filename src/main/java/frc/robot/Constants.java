@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -56,4 +58,7 @@ public final class Constants {
     public static final double ON = 10;
     public static final double THRESHOLD = 0.1;
   }
+
+  public static final AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 }
