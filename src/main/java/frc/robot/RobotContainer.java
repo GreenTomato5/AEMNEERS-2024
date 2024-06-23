@@ -25,6 +25,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.amp.Amp;
+import frc.robot.subsystems.amp.AmpIO;
+import frc.robot.subsystems.amp.AmpIOReal;
+import frc.robot.subsystems.amp.AmpIOSim;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOSim;
@@ -61,6 +65,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Spinner spinner;
   private final Shooter shooter;
+  private final Amp amp;
   private final Climber climber;
 
   // Controller
@@ -85,6 +90,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
+        amp = new Amp(new AmpIOReal());
         climber = new Climber(new ClimberIOSparkMax());
         break;
 
@@ -100,6 +106,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         shooter = new Shooter(new ShooterIOSim());
+        amp = new Amp(new AmpIOSim());
         climber = new Climber(new ClimberIOSim());
         break;
 
@@ -115,6 +122,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         shooter = new Shooter(new ShooterIO() {});
+        amp = new Amp(new AmpIO() {});
         climber = new Climber(new ClimberIO() {});
         break;
     }
@@ -134,7 +142,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Intake PIDs
+    // Intake Sys id stuff (not using, didnt work in sim :( )
     autoChooser.addOption(
         "Shooter SysID", shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
@@ -161,10 +169,11 @@ public class RobotContainer {
     shooter.setDefaultCommand(shooter.getDefaultCommand());
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());
+    amp.setDefaultCommand(amp.getDefaultCommand());
     climber.setDefaultCommand(climber.getDefaultCommand());
 
     // Lock Wheels
-    controller.a().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero Gyro
     controller
@@ -196,6 +205,8 @@ public class RobotContainer {
                     shooter
                         .setSpeedCommand(() -> Constants.Shooter.ON)
                         .alongWith(spinner.setSpeedCommand(() -> Constants.Spinner.FEEDING))));
+    // Amp
+    controller.a().whileTrue(amp.ampCommand(() -> Constants.Amp.ON, () -> Constants.Amp.OUT));
 
     // Climb
 
