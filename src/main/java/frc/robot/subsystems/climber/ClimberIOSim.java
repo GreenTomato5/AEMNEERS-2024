@@ -3,7 +3,6 @@ package frc.robot.subsystems.climber;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.climber.ClimberIO.ClimberIOInputs;
 
 public class ClimberIOSim implements ClimberIO {
   private final DCMotorSim climberSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);

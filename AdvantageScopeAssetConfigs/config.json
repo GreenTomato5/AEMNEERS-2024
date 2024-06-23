@@ -20,9 +20,7 @@
     0,
     0.045
   ],
-  "cameras": [
-
-  ],
+  "cameras": [],
   "components": [
     {
       "zeroedRotations": [
@@ -37,7 +35,7 @@
         {
           "axis": "y",
           "degrees": 0
-        }     
+        }
       ],
       "zeroedPosition": [
         -0.31,
@@ -58,7 +56,7 @@
         {
           "axis": "y",
           "degrees": 0
-        }     
+        }
       ],
       "zeroedPosition": [
         0.317,
