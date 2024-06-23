@@ -56,4 +56,8 @@ public final class Constants {
     public static final double ON = 10;
     public static final double THRESHOLD = 0.1;
   }
+
+  public static final class Climber {
+    public static final double UP = 100;
+  }
 }

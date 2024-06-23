@@ -25,6 +25,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -57,9 +61,11 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Spinner spinner;
   private final Shooter shooter;
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController backupController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -79,6 +85,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
+        climber = new Climber(new ClimberIOSparkMax());
         break;
 
       case SIM:
@@ -93,6 +100,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         shooter = new Shooter(new ShooterIOSim());
+        climber = new Climber(new ClimberIOSim());
         break;
 
       default:
@@ -107,6 +115,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         shooter = new Shooter(new ShooterIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -152,6 +161,7 @@ public class RobotContainer {
     shooter.setDefaultCommand(shooter.getDefaultCommand());
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());
+    climber.setDefaultCommand(climber.getDefaultCommand());
 
     // Lock Wheels
     controller.a().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -186,6 +196,13 @@ public class RobotContainer {
                     shooter
                         .setSpeedCommand(() -> Constants.Shooter.ON)
                         .alongWith(spinner.setSpeedCommand(() -> Constants.Spinner.FEEDING))));
+
+    // Climb
+
+    backupController.
+        y().
+        whileTrue(
+          climber.setPositionCommand(() -> Constants.Climber.UP, () -> Constants.Climber.UP));
   }
 
   /**
