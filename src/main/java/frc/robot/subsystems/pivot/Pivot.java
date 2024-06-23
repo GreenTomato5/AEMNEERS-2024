@@ -49,7 +49,6 @@ public class Pivot extends SubsystemBase {
     }
 
     setUp2dMechSim();
-    // Using SysID is wild
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
