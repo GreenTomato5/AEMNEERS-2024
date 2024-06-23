@@ -45,7 +45,10 @@ public class AmpIOSim implements AmpIO {
 
     if (closedSpinnerLoop) {
       appliedVolts =
-          MathUtil.clamp(spinnerPid.calculate(spinnerSim.getAngularVelocityRadPerSec()) + ffVolts, -12.0, 12.0);
+          MathUtil.clamp(
+              spinnerPid.calculate(spinnerSim.getAngularVelocityRadPerSec()) + ffVolts,
+              -12.0,
+              12.0);
       spinnerSim.setInputVoltage(appliedSpinnerVolts);
     }
 
@@ -54,7 +57,6 @@ public class AmpIOSim implements AmpIO {
     inputs.ampShooterVelocity = spinnerSim.getAngularVelocityRPM() / 60;
     inputs.ampShooterVoltage = appliedSpinnerVolts;
     inputs.ampShooterSpeedPoint = speedPoint;
-  
 
     sim.update(0.02);
 
@@ -62,45 +64,45 @@ public class AmpIOSim implements AmpIO {
     inputs.ampBarAppliedVolts = appliedVolts;
     inputs.ampBarSetpoint = setPoint;
     inputs.ampBarVelocity = sim.getVelocityRadPerSec();
-    }
+  }
 
-    @Override
-    public void setSpinnerVoltage(double volts) {
-      closedSpinnerLoop = false;
-      appliedSpinnerVolts = volts;
-      spinnerSim.setInputVoltage(volts);
-    }
-  
-    @Override
-    public void setSpeed(double rps) {
-      closedSpinnerLoop = true;
-      speedPoint = rps;
-  
-      double feedbackVoltage = spinnerPid.calculate(spinnerSim.getAngularVelocityRPM() / 60, rps);
-      double feedforwardVoltage = ff.calculate(rps);
-  
-      spinnerSim.setInputVoltage(feedbackVoltage + feedforwardVoltage);
-    }
-  
-    @Override
-    public void stopSpinner() {
-      setSpinnerVoltage(0.0);
-    }
-  
-    @Override
-    public void configureSpinnerPID(double kP, double kI, double kD) {
-      spinnerPid.setPID(kP, kI, kD);
-    }
-  
-    @Override
-    public void configureFeedForward(double kS, double kV, double kA) {
-      ff = new SimpleMotorFeedforward(kS, kV, kA);
-    }
-  
-    public boolean nearSpeedPoint() {
-      return Math.abs(speedPoint - spinnerSim.getAngularVelocityRPM() / 60) < Constants.Spinner.THRESHOLD;
-    }
-  
+  @Override
+  public void setSpinnerVoltage(double volts) {
+    closedSpinnerLoop = false;
+    appliedSpinnerVolts = volts;
+    spinnerSim.setInputVoltage(volts);
+  }
+
+  @Override
+  public void setSpeed(double rps) {
+    closedSpinnerLoop = true;
+    speedPoint = rps;
+
+    double feedbackVoltage = spinnerPid.calculate(spinnerSim.getAngularVelocityRPM() / 60, rps);
+    double feedforwardVoltage = ff.calculate(rps);
+
+    spinnerSim.setInputVoltage(feedbackVoltage + feedforwardVoltage);
+  }
+
+  @Override
+  public void stopSpinner() {
+    setSpinnerVoltage(0.0);
+  }
+
+  @Override
+  public void configureSpinnerPID(double kP, double kI, double kD) {
+    spinnerPid.setPID(kP, kI, kD);
+  }
+
+  @Override
+  public void configureFeedForward(double kS, double kV, double kA) {
+    ff = new SimpleMotorFeedforward(kS, kV, kA);
+  }
+
+  public boolean nearSpeedPoint() {
+    return Math.abs(speedPoint - spinnerSim.getAngularVelocityRPM() / 60)
+        < Constants.Spinner.THRESHOLD;
+  }
 
   @Override
   public void setPosition(double positionRad) {
@@ -136,5 +138,4 @@ public class AmpIOSim implements AmpIO {
   public boolean nearSetPoint() {
     return Math.abs(setPoint - sim.getAngleRads()) < Constants.Spinner.THRESHOLD;
   }
-  
 }

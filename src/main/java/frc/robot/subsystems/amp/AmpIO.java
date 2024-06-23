@@ -1,8 +1,7 @@
 package frc.robot.subsystems.amp;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import frc.robot.subsystems.shooter.ShooterIO.ShooterIOInputs;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface AmpIO {
 
@@ -15,10 +14,8 @@ public interface AmpIO {
     public double ampShooterVelocity = 0.0;
     public double ampShooterSpeedPoint = 0.0;
     public double ampShooterVoltage = 0.0;
-
-
-
-  }/** Updates the set of loggable inputs. */
+  }
+  /** Updates the set of loggable inputs. */
   public default void updateInputs(AmpIOInputs inputs) {}
 
   /** Sets the angle of the amp bar, in radians. */
@@ -41,7 +38,7 @@ public interface AmpIO {
     return 0.0;
   }
 
-    public default void updateInputs(ShooterIOInputs inputs) {}
+  public default void updateInputs(ShooterIOInputs inputs) {}
 
   /** Sets the angle of the intake, in radians. */
   public default void setSpeed(double rps) {}
