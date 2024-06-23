@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.Vision.VisionIOReal;
+import frc.robot.subsystems.Vision.VisionIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -75,6 +77,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(1),
                 new ModuleIOTalonFX(2),
                 new ModuleIOTalonFX(3));
+                new VisionIOReal();
         // Idk what ID the pivot motor is :(
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
@@ -89,6 +92,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim(),
+                new VisionIOSim(),
                 new ModuleIOSim());
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());

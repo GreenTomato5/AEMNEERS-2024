@@ -20,10 +20,15 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -35,11 +40,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.Vision.AprilTagVisionIOInputsAutoLogged;
+import frc.robot.subsystems.Vision.VisionIO;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.Vision.VisionIO;
+import frc.robot.subsystems.Vision.AprilTagVisionIOInputsAutoLogged;
 
 public class Drive extends SubsystemBase {
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
@@ -67,17 +76,27 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
+  private final VisionIO visionIO;
+  private final AprilTagVisionIOInputsAutoLogged aprilTagVisionInputs =
+      new AprilTagVisionIOInputsAutoLogged();
+
+  @AutoLogOutput public boolean useVision = true;
+
+
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
-      ModuleIO brModuleIO) {
+      ModuleIO brModuleIO,
+      VisionIO visionIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
     modules[1] = new Module(frModuleIO, 1);
     modules[2] = new Module(blModuleIO, 2);
     modules[3] = new Module(brModuleIO, 3);
+    this.visionIO = visionIO;
+
 
     // Start threads (no-op for each if no signals have been created)
     PhoenixOdometryThread.getInstance().start();
@@ -179,6 +198,17 @@ public class Drive extends SubsystemBase {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
+    visionIO.updatePose(getPose());
+    visionIO.updateInputs(aprilTagVisionInputs);
+    Logger.processInputs("Drive/AprilTagVision", aprilTagVisionInputs);
+    Pose2d[] pose2dArray = new Pose2d[aprilTagVisionInputs.visionPoses.length];
+
+    for (int i = 0; i < aprilTagVisionInputs.visionPoses.length; i++) {
+        pose2dArray[i] = convertPose3dToPose2d(aprilTagVisionInputs.visionPoses[i]);
+    }
+    //poseEstimator.addVisionMeasurement(pose2dArray, aprilTagVisionInputs.timestamps);
+    
+    
   }
 
   /**
@@ -186,6 +216,20 @@ public class Drive extends SubsystemBase {
    *
    * @param speeds Speeds in meters/sec
    */
+
+   public static Pose2d convertPose3dToPose2d(Pose3d pose3d) {
+        // Extract the translation (X, Y)
+        Translation3d translation3d = pose3d.getTranslation();
+        double x = translation3d.getX();
+        double y = translation3d.getY();
+
+        // Extract the rotation (Yaw angle)
+        Rotation3d rotation3d = pose3d.getRotation();
+        Rotation2d rotation2d = new Rotation2d(rotation3d.getZ());
+
+        // Create and return the Pose2d
+        return new Pose2d(new Translation2d(x, y), rotation2d);
+    }
   public void runVelocity(ChassisSpeeds speeds) {
     // Calculate module setpoints
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
