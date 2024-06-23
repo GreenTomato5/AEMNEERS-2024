@@ -49,7 +49,6 @@ public class Pivot extends SubsystemBase {
     }
 
     setUp2dMechSim();
-    // Using SysID is wild
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
@@ -70,14 +69,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void logPose3d(Translation3d robotTranslation3d) {
-    /**
-     * Zeroed with robot: x = 0.083 y = 0.22 z = 0.54
-     *
-     * <p>Zeroed With Axis: X = -0.23 y = 0.22 z = 0.34
-     */
-
-    // I dont think this is the right way to do it but i did it this way :)
-    zeroedTranslation3d = new Translation3d(0.313, 0, 0.2);
+    zeroedTranslation3d = new Translation3d(0.31, 0, 0.24);
 
     sim3dPose = new Pose3d(robotTranslation3d, new Rotation3d(0, io.getPivotPosition(), 0));
     zeroedPose3d = new Pose3d(zeroedTranslation3d, sim3dPose.getRotation());

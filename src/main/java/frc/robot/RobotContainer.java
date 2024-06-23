@@ -29,6 +29,10 @@ import frc.robot.subsystems.amp.Amp;
 import frc.robot.subsystems.amp.AmpIO;
 import frc.robot.subsystems.amp.AmpIOReal;
 import frc.robot.subsystems.amp.AmpIOSim;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -62,9 +66,11 @@ public class RobotContainer {
   private final Spinner spinner;
   private final Shooter shooter;
   private final Amp amp;
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController backupController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -85,6 +91,7 @@ public class RobotContainer {
         spinner = new Spinner(new SpinnerIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
         amp = new Amp(new AmpIOReal());
+        climber = new Climber(new ClimberIOSparkMax());
         break;
 
       case SIM:
@@ -100,6 +107,7 @@ public class RobotContainer {
         spinner = new Spinner(new SpinnerIOSim());
         shooter = new Shooter(new ShooterIOSim());
         amp = new Amp(new AmpIOSim());
+        climber = new Climber(new ClimberIOSim());
         break;
 
       default:
@@ -115,6 +123,7 @@ public class RobotContainer {
         spinner = new Spinner(new SpinnerIO() {});
         shooter = new Shooter(new ShooterIO() {});
         amp = new Amp(new AmpIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -161,6 +170,7 @@ public class RobotContainer {
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());
     amp.setDefaultCommand(amp.getDefaultCommand());
+    climber.setDefaultCommand(climber.getDefaultCommand());
 
     // Lock Wheels
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -197,6 +207,13 @@ public class RobotContainer {
                         .alongWith(spinner.setSpeedCommand(() -> Constants.Spinner.FEEDING))));
     // Amp
     controller.a().whileTrue(amp.ampCommand(() -> Constants.Amp.ON, () -> Constants.Amp.OUT));
+
+    // Climb
+
+    backupController
+        .y()
+        .whileTrue(
+            climber.setPositionCommand(() -> Constants.Climber.UP, () -> Constants.Climber.UP));
   }
 
   /**
