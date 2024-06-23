@@ -38,7 +38,7 @@ public class Amp extends SubsystemBase {
         io.configurePivotPID(1, 0, 0);
         break;
       case SIM:
-        io.configurePivotPID(1, 0, 0);
+        io.configurePivotPID(3, 0, 0);
         io.configureSpinnerPID(1, 0, 0);
         break;
       default:
@@ -75,8 +75,9 @@ public class Amp extends SubsystemBase {
   }
 
   public void logPose3d() {
-    zeroedTranslation3d = new Translation3d(0, 0, 0);
-    zeroedPose3d = new Pose3d(zeroedTranslation3d, new Rotation3d(0, io.getPivotPosition(), 0));
+    zeroedTranslation3d = new Translation3d(-0.317, 0, 0.48);
+    // Negative so it goes the right direction
+    zeroedPose3d = new Pose3d(zeroedTranslation3d, new Rotation3d(0, -io.getPivotPosition(), 0));
     Logger.recordOutput("Amp/AmpBarPose3D", zeroedPose3d);
   }
 
