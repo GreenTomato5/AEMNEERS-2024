@@ -16,7 +16,7 @@ public interface AmpIO {
     public double spinnerSpeedPoint = 0.0;
     public double spinnerAppliedVolts = 0.0;
   }
-  
+
   /** Updates the set of loggable inputs. */
   public default void updateInputs(AmpIOInputs inputs) {}
 
@@ -28,6 +28,10 @@ public interface AmpIO {
   public default void stopPivot() {}
 
   public default void configurePivotPID(double kP, double kI, double kD) {}
+
+  public default double getPivotPosition() {
+    return 0.0;
+  }
 
   // Bar Spinner Stuff
   public default void setSpinnerSpeed(double rps) {}

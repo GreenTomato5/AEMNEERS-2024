@@ -25,6 +25,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.amp.Amp;
+import frc.robot.subsystems.amp.AmpIO;
+import frc.robot.subsystems.amp.AmpIOReal;
+import frc.robot.subsystems.amp.AmpIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavx2;
@@ -57,6 +61,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Spinner spinner;
   private final Shooter shooter;
+  private final Amp amp;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,6 +84,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
+        amp = new Amp(new AmpIOReal());
         break;
 
       case SIM:
@@ -93,6 +99,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         shooter = new Shooter(new ShooterIOSim());
+        amp = new Amp(new AmpIOSim());
         break;
 
       default:
@@ -107,6 +114,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         shooter = new Shooter(new ShooterIO() {});
+        amp = new Amp(new AmpIO() {});
         break;
     }
 
@@ -125,7 +133,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Intake PIDs
+    // Intake Sys id stuff (not using, didnt work in sim :( )
     autoChooser.addOption(
         "Shooter SysID", shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
@@ -142,7 +150,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Default Commands
-  
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -152,9 +160,10 @@ public class RobotContainer {
     shooter.setDefaultCommand(shooter.getDefaultCommand());
     spinner.setDefaultCommand(spinner.getDefaultCommand());
     pivot.setDefaultCommand(pivot.getDefaultCommand());
+    amp.setDefaultCommand(amp.getDefaultCommand());
 
     // Lock Wheels
-    controller.a().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero Gyro
     controller
@@ -186,6 +195,8 @@ public class RobotContainer {
                     shooter
                         .setSpeedCommand(() -> Constants.Shooter.ON)
                         .alongWith(spinner.setSpeedCommand(() -> Constants.Spinner.FEEDING))));
+    // Amp
+    controller.a().whileTrue(amp.ampCommand(() -> Constants.Amp.ON, () -> Constants.Amp.OUT));
   }
 
   /**

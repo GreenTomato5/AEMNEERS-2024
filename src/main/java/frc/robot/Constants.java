@@ -56,4 +56,9 @@ public final class Constants {
     public static final double ON = 10;
     public static final double THRESHOLD = 0.1;
   }
+
+  public static final class Amp {
+    public static final double ON = 2;
+    public static final double OUT = Units.degreesToRadians(120);
+  }
 }

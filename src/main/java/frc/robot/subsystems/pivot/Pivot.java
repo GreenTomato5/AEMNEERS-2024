@@ -85,7 +85,7 @@ public class Pivot extends SubsystemBase {
     Logger.recordOutput("Pivot/Pivot 3d Pose", sim3dPose);
     Logger.recordOutput("Pivot/Zeroed Pose", zeroedPose3d);
   }
-  
+
   public Command setPositionCommand(DoubleSupplier posRad) {
     return run(() -> setPosition(posRad.getAsDouble()));
   }
