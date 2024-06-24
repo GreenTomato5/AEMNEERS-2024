@@ -36,8 +36,7 @@ public class SpinnerIOTalonFX implements SpinnerIO {
   }
 
   public boolean nearSpeedPoint() {
-    return Math.abs(speedPoint - motor.getVelocity().getValueAsDouble())
-        < Constants.Spinner.THRESHOLD;
+    return Math.abs(speedPoint - motor.getVelocity().getValueAsDouble()) < Constants.Spinner.THRESHOLD;
   }
 
   public double getSpeedPoint() {

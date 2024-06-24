@@ -18,27 +18,36 @@ public interface AmpIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(AmpIOInputs inputs) {}
+  public default void updateInputs(AmpIOInputs inputs) {
+  }
 
   // Pivot Stuff
-  public default void setPivotPosition(double positionRad) {}
+  public default void setPivotPosition(double positionRad) {
+  }
 
-  public default void setPivotVoltage(double volts) {}
+  public default void setPivotVoltage(double volts) {
+  }
 
-  public default void stopPivot() {}
+  public default void stopPivot() {
+  }
 
-  public default void configurePivotPID(double kP, double kI, double kD) {}
+  public default void configurePivotPID(double kP, double kI, double kD) {
+  }
 
   public default double getPivotPosition() {
     return 0.0;
   }
 
   // Bar Spinner Stuff
-  public default void setSpinnerSpeed(double rps) {}
+  public default void setSpinnerSpeed(double rps) {
+  }
 
-  public default void setSpinnerVoltage(double volts) {}
+  public default void setSpinnerVoltage(double volts) {
+  }
 
-  public default void stopSpinner() {}
+  public default void stopSpinner() {
+  }
 
-  public default void configureSpinnerPID(double kP, double kI, double kD) {}
+  public default void configureSpinnerPID(double kP, double kI, double kD) {
+  }
 }

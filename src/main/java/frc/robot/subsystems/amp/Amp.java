@@ -45,24 +45,22 @@ public class Amp extends SubsystemBase {
         break;
     }
 
-    spinnerSysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (voltage) -> runSpinnerVolts(voltage.in(Volts)), null, this));
+    spinnerSysId = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,
+            null,
+            null,
+            (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
+        new SysIdRoutine.Mechanism(
+            (voltage) -> runSpinnerVolts(voltage.in(Volts)), null, this));
 
-    pivotSysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism((voltage) -> runPivotVolts(voltage.in(Volts)), null, this));
+    pivotSysId = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,
+            null,
+            null,
+            (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
+        new SysIdRoutine.Mechanism((voltage) -> runPivotVolts(voltage.in(Volts)), null, this));
   }
 
   // Pivot Stuff
@@ -76,7 +74,6 @@ public class Amp extends SubsystemBase {
 
   public void logPose3d() {
     zeroedTranslation3d = new Translation3d(-0.317, 0, 0.48);
-    // Negative so it goes the right direction
     zeroedPose3d = new Pose3d(zeroedTranslation3d, new Rotation3d(0, -io.getPivotPosition(), 0));
     Logger.recordOutput("Amp/AmpBarPose3D", zeroedPose3d);
   }

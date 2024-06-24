@@ -66,7 +66,7 @@ public class AmpIOReal implements AmpIO {
   }
 
   public double getPivotPosition() {
-    // Womp womp only one is getting used
+    // Easier to use 1 motor than 2 :)
     return leftEncoder.getPosition();
   }
 

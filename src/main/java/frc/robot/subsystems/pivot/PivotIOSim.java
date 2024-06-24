@@ -8,16 +8,15 @@ import frc.robot.Constants;
 
 public class PivotIOSim implements PivotIO {
   // I guessed innacuratley, idk what half of this means fr
-  private final SingleJointedArmSim sim =
-      new SingleJointedArmSim(
-          DCMotor.getKrakenX60(1),
-          67.5, // gearing
-          0.192383865, // MOI
-          0.3, // arm length
-          Units.degreesToRadians(0), // min angle -- floor
-          Units.degreesToRadians(180), // max angle -- hard stop
-          false,
-          Units.degreesToRadians(0));
+  private final SingleJointedArmSim sim = new SingleJointedArmSim(
+      DCMotor.getKrakenX60(1),
+      67.5, // gearing
+      0.192383865, // MOI
+      0.3, // arm length
+      Units.degreesToRadians(0), // min angle -- floor
+      Units.degreesToRadians(180), // max angle -- hard stop
+      false,
+      Units.degreesToRadians(0));
   private final PIDController pid = new PIDController(0.0, 0.0, 0.0);
 
   private boolean closedLoop = false;
@@ -26,19 +25,14 @@ public class PivotIOSim implements PivotIO {
   public double setPoint = 0.0;
 
   @Override
-  public void updateInputs(PivotIOInputs inputs) {
-    if (closedLoop) {
-      // Need this bc of L sysID that uses open loop
-      appliedVolts = pid.calculate(sim.getAngleRads(), setPoint);
-      sim.setInputVoltage(appliedVolts);
-    }
-
-    sim.update(0.02);
+  public void updateInputs(PivotIOInputs inputs) {    
 
     inputs.pivotCurrentPosition = sim.getAngleRads();
     inputs.pivotAppliedVolts = appliedVolts;
     inputs.pivotSetpoint = setPoint;
     inputs.pivotVelocity = sim.getVelocityRadPerSec();
+
+    sim.update(0.02);
   }
 
   @Override

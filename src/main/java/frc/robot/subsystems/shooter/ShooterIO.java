@@ -16,22 +16,28 @@ public interface ShooterIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(ShooterIOInputs inputs) {}
+  public default void updateInputs(ShooterIOInputs inputs) {
+  }
 
   /** Sets the angle of the intake, in radians. */
-  public default void setSpeed(double rps) {}
+  public default void setSpeed(double rps) {
+  }
 
   /** Run open loop at the specified voltage. */
-  public default void setVoltage(double volts) {}
+  public default void setVoltage(double volts) {
+  }
 
   /** Stop in open loop. */
-  public default void stop() {}
+  public default void stop() {
+  }
 
   /** Set velocity PID constants. */
-  public default void configurePID(double kP, double kI, double kD) {}
+  public default void configurePID(double kP, double kI, double kD) {
+  }
 
   /** Set ff constants */
-  public default void configureFeedForward(double kS, double kV, double kA) {}
+  public default void configureFeedForward(double kS, double kV, double kA) {
+  }
 
   public default boolean nearSpeedPoint() {
     return false;

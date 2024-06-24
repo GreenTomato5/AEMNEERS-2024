@@ -8,16 +8,15 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class AmpIOSim implements AmpIO {
   // Literally just the intake values LOL
-  private final SingleJointedArmSim pivotSim =
-      new SingleJointedArmSim(
-          DCMotor.getNEO(2),
-          67.5,
-          0.192383865,
-          0.3,
-          Units.degreesToRadians(0),
-          Units.degreesToRadians(180),
-          false,
-          Units.degreesToRadians(0));
+  private final SingleJointedArmSim pivotSim = new SingleJointedArmSim(
+      DCMotor.getNEO(2),
+      67.5,
+      0.192383865,
+      0.3,
+      Units.degreesToRadians(0),
+      Units.degreesToRadians(180),
+      false,
+      Units.degreesToRadians(0));
   // These values are more wrong than you can imagine
   private FlywheelSim spinnerSim = new FlywheelSim(DCMotor.getKrakenX60(1), 1.5, 0.004);
 
