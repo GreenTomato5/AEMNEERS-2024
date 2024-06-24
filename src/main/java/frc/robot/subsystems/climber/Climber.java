@@ -47,7 +47,6 @@ public class Climber extends SubsystemBase {
     return sysId.quasistatic(direction);
   }
 
-  /** Returns a command to run a dynamic test in the specified direction. */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysId.dynamic(direction);
   }

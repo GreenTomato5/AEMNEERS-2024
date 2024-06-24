@@ -27,18 +27,13 @@ public class PivotIOSim implements PivotIO {
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
-    if (closedLoop) {
-      // Need this bc of L sysID that uses open loop
-      appliedVolts = pid.calculate(sim.getAngleRads(), setPoint);
-      sim.setInputVoltage(appliedVolts);
-    }
-
-    sim.update(0.02);
 
     inputs.pivotCurrentPosition = sim.getAngleRads();
     inputs.pivotAppliedVolts = appliedVolts;
     inputs.pivotSetpoint = setPoint;
     inputs.pivotVelocity = sim.getVelocityRadPerSec();
+
+    sim.update(0.02);
   }
 
   @Override

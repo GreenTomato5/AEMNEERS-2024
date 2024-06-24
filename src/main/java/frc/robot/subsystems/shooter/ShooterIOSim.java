@@ -9,7 +9,8 @@ import frc.robot.Constants;
 
 public class ShooterIOSim implements ShooterIO {
 
-  // Uhhh so idk what the correct values for this is either other than the num motors, someone
+  // Uhhh so idk what the correct values for this is either other than the num
+  // motors, someone
   // TODO: please get the values
   private FlywheelSim sim = new FlywheelSim(DCMotor.getFalcon500(2), 1.5, 0.004);
   private PIDController pid = new PIDController(0.0, 0.0, 0.0);

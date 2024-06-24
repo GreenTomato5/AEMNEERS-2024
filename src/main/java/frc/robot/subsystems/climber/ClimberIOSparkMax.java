@@ -9,11 +9,13 @@ public class ClimberIOSparkMax implements ClimberIO {
 
   private CANSparkMax leftClimber;
   private CANSparkMax rightClimber;
+
   private RelativeEncoder leftEncoder;
   private RelativeEncoder rightEncoder;
 
   private double leftSetpoint = 0.0;
   private double rightSetpoint = 0.0;
+
   private PIDController controller = new PIDController(0, 0, 0);
 
   public ClimberIOSparkMax() {
@@ -60,7 +62,8 @@ public class ClimberIOSparkMax implements ClimberIO {
     controller.setPID(kP, kI, kD);
   }
 
-  // Im not going to use these bc idk how to implement them in sim so womp womp zzzz
+  // Im not going to use these bc idk how to implement them in sim so womp womp
+  // zzzz
 
   public boolean leftClimberOverCurrentLimit(double currentLimit) {
     return leftClimber.getOutputCurrent() > currentLimit;
