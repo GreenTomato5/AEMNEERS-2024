@@ -54,7 +54,8 @@ public class SpinnerIOSim implements SpinnerIO {
   }
 
   public boolean nearSpeedPoint() {
-    return Math.abs(speedPoint - intakeSim.getAngularVelocityRPM() / 60) < Constants.Spinner.THRESHOLD;
+    return Math.abs(speedPoint - intakeSim.getAngularVelocityRPM() / 60)
+        < Constants.Spinner.THRESHOLD;
   }
 
   public void configurePID(double kP, double kI, double kD) {

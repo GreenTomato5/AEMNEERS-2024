@@ -45,22 +45,24 @@ public class Amp extends SubsystemBase {
         break;
     }
 
-    spinnerSysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null,
-            null,
-            null,
-            (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (voltage) -> runSpinnerVolts(voltage.in(Volts)), null, this));
+    spinnerSysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> runSpinnerVolts(voltage.in(Volts)), null, this));
 
-    pivotSysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null,
-            null,
-            null,
-            (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
-        new SysIdRoutine.Mechanism((voltage) -> runPivotVolts(voltage.in(Volts)), null, this));
+    pivotSysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Amp/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism((voltage) -> runPivotVolts(voltage.in(Volts)), null, this));
   }
 
   // Pivot Stuff

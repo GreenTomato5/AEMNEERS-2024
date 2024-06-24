@@ -54,12 +54,9 @@ import frc.robot.subsystems.spinner.SpinnerIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -78,18 +75,17 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
-        drive = new Drive(
-            new GyroIONavx2(SPI.Port.kMXP),
-            new ModuleIOTalonFX(0),
-            new ModuleIOTalonFX(1),
-            new ModuleIOTalonFX(2),
-            new ModuleIOTalonFX(3));
+        drive =
+            new Drive(
+                new GyroIONavx2(SPI.Port.kMXP),
+                new ModuleIOTalonFX(0),
+                new ModuleIOTalonFX(1),
+                new ModuleIOTalonFX(2),
+                new ModuleIOTalonFX(3));
         // Idk what ID the pivot motor is :(
         pivot = new Pivot(new PivotIOSparkMax());
         spinner = new Spinner(new SpinnerIOTalonFX());
@@ -100,13 +96,13 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive = new Drive(
-            new GyroIO() {
-            },
-            new ModuleIOSim(),
-            new ModuleIOSim(),
-            new ModuleIOSim(),
-            new ModuleIOSim());
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIOSim(),
+                new ModuleIOSim(),
+                new ModuleIOSim(),
+                new ModuleIOSim());
         pivot = new Pivot(new PivotIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         shooter = new Shooter(new ShooterIOSim());
@@ -116,27 +112,18 @@ public class RobotContainer {
 
       default:
         // Replayed robot, disable IO implementations
-        drive = new Drive(
-            new GyroIO() {
-            },
-            new ModuleIO() {
-            },
-            new ModuleIO() {
-            },
-            new ModuleIO() {
-            },
-            new ModuleIO() {
-            });
-        pivot = new Pivot(new PivotIO() {
-        });
-        spinner = new Spinner(new SpinnerIO() {
-        });
-        shooter = new Shooter(new ShooterIO() {
-        });
-        amp = new Amp(new AmpIO() {
-        });
-        climber = new Climber(new ClimberIO() {
-        });
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
+        pivot = new Pivot(new PivotIO() {});
+        spinner = new Spinner(new SpinnerIO() {});
+        shooter = new Shooter(new ShooterIO() {});
+        amp = new Amp(new AmpIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -164,11 +151,9 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
+   * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -195,9 +180,10 @@ public class RobotContainer {
         .b()
         .onTrue(
             Commands.runOnce(
-                () -> drive.setPose(
-                    new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                drive)
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
                 .ignoringDisable(true));
 
     // Intake
