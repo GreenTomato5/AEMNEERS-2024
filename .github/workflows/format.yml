@@ -1,4 +1,4 @@
-name: Format Java Code with Prettier
+name: Format With Prettier
 
 on:
   push:
@@ -10,19 +10,15 @@ on:
       - main
       - Auto-Formatting
 
-permissions:
-  contents: write
-  actions: read    
-
 jobs:
   format:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Repo
       uses: actions/checkout@v3
 
-    - name: Set up mid JS framework
+    - name: Set Up Mid JS Framework
       uses: actions/setup-node@v3
       with:
         node-version: '16'
@@ -30,7 +26,10 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Apply Prettier Formatting
+    - name: Fix permissions
+      run: chmod +x node_modules/.bin/prettier
+
+    - name: Apply Prettier
       run: npx prettier --write "**/*.java"
 
     - name: Commit changes
