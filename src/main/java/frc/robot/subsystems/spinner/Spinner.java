@@ -12,71 +12,70 @@ import org.littletonrobotics.junction.Logger;
 
 public class Spinner extends SubsystemBase {
 
-  private SpinnerIO io;
-  private SpinnerIOInputsAutoLogged inputs = new SpinnerIOInputsAutoLogged();
-  private SysIdRoutine sysId;
+	private SpinnerIO io;
+	private SpinnerIOInputsAutoLogged inputs = new SpinnerIOInputsAutoLogged();
+	private SysIdRoutine sysId;
 
-  public Spinner(SpinnerIO io) {
-    this.io = io;
+	public Spinner(SpinnerIO io) {
+		this.io = io;
 
-    // TODO: Tune feedback controllers, these values are MADE UP
-    switch (Constants.currentMode) {
-      case REAL:
-        io.configurePID(1.0, 0, 0);
-        break;
-      case REPLAY:
-        io.configurePID(1.0, 0.0, 0.0);
-        break;
-      case SIM:
-        io.configurePID(1.0, 0.0, 0.0);
-        break;
-      default:
-        break;
-    }
+		// TODO: Tune feedback controllers, these values are MADE UP
+		switch (Constants.currentMode) {
+			case REAL:
+				io.configurePID(1.0, 0, 0);
+				break;
+			case REPLAY:
+				io.configurePID(1.0, 0.0, 0.0);
+				break;
+			case SIM:
+				io.configurePID(1.0, 0.0, 0.0);
+				break;
+			default:
+				break;
+		}
 
-    sysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Spinner/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism((voltage) -> runVolts(voltage.in(Volts)), null, this));
-  }
+		sysId = new SysIdRoutine(
+			new SysIdRoutine.Config(null, null, null, state ->
+				Logger.recordOutput("Spinner/SysIdState", state.toString())
+			),
+			new SysIdRoutine.Mechanism(voltage -> runVolts(voltage.in(Volts)), null, this)
+		);
+	}
 
-  public void setSpeed(Double rps) {
-    io.setSpeed(rps);
-  }
+	public void setSpeed(Double rps) {
+		io.setSpeed(rps);
+	}
 
-  public void runVolts(Double volts) {
-    io.setVoltage(volts);
-  }
+	public void runVolts(Double volts) {
+		io.setVoltage(volts);
+	}
 
-  public Command setSpeedCommand(DoubleSupplier rps) {
-    return run(() -> setSpeed(rps.getAsDouble()));
-  }
+	public Command setSpeedCommand(DoubleSupplier rps) {
+		return run(() -> setSpeed(rps.getAsDouble()));
+	}
 
-  public Command getDefaultCommand() {
-    return setSpeedCommand(() -> 0);
-  }
+	public Command getDefaultCommand() {
+		return setSpeedCommand(() -> 0);
+	}
 
-  public boolean atSetpoint() {
-    return io.nearSpeedPoint();
-  }
+	public boolean atSetpoint() {
+		return io.nearSpeedPoint();
+	}
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysId.quasistatic(direction);
-  }
+	public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return sysId.quasistatic(direction);
+	}
 
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysId.dynamic(direction);
-  }
+	public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+		return sysId.dynamic(direction);
+	}
 
-  public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Spinner", inputs);
-    Logger.recordOutput(
-        "Spinner/Running Command",
-        Optional.ofNullable(this.getCurrentCommand()).map(Command::getName).orElse("None"));
-  }
+	public void periodic() {
+		io.updateInputs(inputs);
+		Logger.processInputs("Spinner", inputs);
+		Logger.recordOutput(
+			"Spinner/Running Command",
+			Optional.ofNullable(this.getCurrentCommand()).map(Command::getName).orElse("None")
+		);
+	}
 }

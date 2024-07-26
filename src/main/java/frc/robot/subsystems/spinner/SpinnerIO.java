@@ -3,29 +3,30 @@ package frc.robot.subsystems.spinner;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SpinnerIO {
-  @AutoLog
-  public static class SpinnerIOInputs {
-    public double wheelSpeed = 0.0;
-    public double wheelSpeedPoint = 0.0;
-    public double wheelAppliedVolts = 0.0;
-  }
+	@AutoLog
+	public static class SpinnerIOInputs {
 
-  /** Updates the set of loggable inputs. */
-  public default void updateInputs(SpinnerIOInputs inputs) {}
+		public double wheelSpeed = 0.0;
+		public double wheelSpeedPoint = 0.0;
+		public double wheelAppliedVolts = 0.0;
+	}
 
-  /** Sets the angle of the intake, in radians. */
-  public default void setSpeed(double speed) {}
+	/** Updates the set of loggable inputs. */
+	public default void updateInputs(SpinnerIOInputs inputs) {}
 
-  /** Run open loop at the specified voltage. */
-  public default void setVoltage(double volts) {}
+	/** Sets the angle of the intake, in radians. */
+	public default void setSpeed(double speed) {}
 
-  /** Stop in open loop. */
-  public default void stop() {}
+	/** Run open loop at the specified voltage. */
+	public default void setVoltage(double volts) {}
 
-  /** Set velocity PID constants. */
-  public default void configurePID(double kP, double kI, double kD) {}
+	/** Stop in open loop. */
+	public default void stop() {}
 
-  public default boolean nearSpeedPoint() {
-    return false;
-  }
+	/** Set velocity PID constants. */
+	public default void configurePID(double kP, double kI, double kD) {}
+
+	public default boolean nearSpeedPoint() {
+		return false;
+	}
 }
