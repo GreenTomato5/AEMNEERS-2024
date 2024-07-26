@@ -39,6 +39,18 @@ jobs:
         git diff --exit-code || echo "Changes detected"
       continue-on-error: true
 
+    # It said there were changes that werent pulled so pull them ig? idrk
+     - name: Pull latest changes
+      run: |
+        if [ "${GITHUB_EVENT_NAME}" == "pull_request" ]; then
+          git fetch origin
+          git checkout "${GITHUB_HEAD_REF}"
+          git pull origin "${GITHUB_HEAD_REF}"
+        elif [ "${GITHUB_EVENT_NAME}" == "push" ]; then
+          git fetch origin
+          git pull origin "${GITHUB_REF#refs/heads/}"
+        fi
+
     - name: Commit changes
       if: steps.git-check.outcome == 'success'
       run: |
@@ -46,11 +58,10 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git add .
         git commit -m 'Apply Prettier format' || echo "No changes to commit"
-        # Determine ref for push based on context
-        if [[ $GITHUB_EVENT_NAME == 'pull_request' ]]; then
-          git push origin "HEAD:refs/heads/${{ github.head_ref }}"
-        else
-          git push origin "HEAD"
+       if [ "${GITHUB_EVENT_NAME}" == "pull_request" ]; then
+          git push origin "${GITHUB_HEAD_REF}"
+        elif [ "${GITHUB_EVENT_NAME}" == "push" ]; then
+          git push origin "${GITHUB_REF#refs/heads/}"
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
