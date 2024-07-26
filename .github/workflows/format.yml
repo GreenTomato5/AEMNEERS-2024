@@ -41,12 +41,12 @@ jobs:
 
     - name: Commit changes
       if: steps.git-check.outcome == 'success'
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add .
-          git commit -m 'Apply Prettier format' || echo "No changes to commit"
-          git push origin "${GITHUB_HEAD_REF}"
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add .
+        git commit -m 'Apply Prettier format' || echo "No changes to commit"
+        git push origin "${GITHUB_HEAD_REF}"
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
