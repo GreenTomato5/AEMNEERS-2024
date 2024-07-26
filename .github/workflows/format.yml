@@ -28,9 +28,6 @@ jobs:
         rm -rf node_modules
         npm install
 
-    - name: List Prettier executable
-      run: ls -al node_modules/.bin/prettier
-
     - name: Apply Prettier
       run: npx prettier --write "**/*.java"
 
