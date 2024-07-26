@@ -44,7 +44,9 @@ jobs:
           git add .
           git commit -m 'Apply Prettier format' || echo "No changes to commit"
           git push origin "${GITHUB_HEAD_REF}"
-      else:
-        echo "No Formatting Required"
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Notify if no Changes
+      if: steps.git-check.outcome == 'failure'
+      run: echo "Formatting not Required"
