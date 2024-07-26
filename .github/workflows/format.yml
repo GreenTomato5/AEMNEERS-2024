@@ -40,7 +40,8 @@ jobs:
       continue-on-error: true
 
     - name: Print branch name
-      run: echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+      run: |
+       echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
 
     - name: Commit changes
       if: steps.git-check.outcome == 'success'
