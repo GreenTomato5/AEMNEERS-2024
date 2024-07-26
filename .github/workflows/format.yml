@@ -1,9 +1,6 @@
 name: Format With Prettier
 
 on:
-  push:
-    branches:
-      - Auto-Formatting
   pull_request:
     branches:
       - main
@@ -39,6 +36,6 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git add .
         git commit -m 'Apply Prettier format' || echo "No changes to commit"
-        git push origin Auto-Formatting
+        git push origin HEAD
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
