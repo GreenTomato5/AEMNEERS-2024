@@ -10,64 +10,63 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Climber extends SubsystemBase {
-  private final ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
-  ClimberIO io;
-  SysIdRoutine sysId;
+	private final ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
-  public Climber(ClimberIO io) {
-    this.io = io;
+	ClimberIO io;
+	SysIdRoutine sysId;
 
-    // Taken directly from pivot :)
-    switch (Constants.currentMode) {
-      case REAL:
-        io.configurePID(1.0, 0, 0);
-        break;
-      case REPLAY:
-        io.configurePID(1.0, 0.0, 0.0);
-        break;
-      case SIM:
-        io.configurePID(3.0, 0.0, 0.1);
-        break;
-      default:
-        break;
-    }
+	public Climber(ClimberIO io) {
+		this.io = io;
 
-    sysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Climber/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism((voltage) -> runVolts(voltage.in(Volts)), null, this));
-  }
+		// Taken directly from pivot :)
+		switch (Constants.currentMode) {
+			case REAL:
+				io.configurePID(1.0, 0, 0);
+				break;
+			case REPLAY:
+				io.configurePID(1.0, 0.0, 0.0);
+				break;
+			case SIM:
+				io.configurePID(3.0, 0.0, 0.1);
+				break;
+			default:
+				break;
+		}
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysId.quasistatic(direction);
-  }
+		sysId = new SysIdRoutine(
+			new SysIdRoutine.Config(null, null, null, state ->
+				Logger.recordOutput("Climber/SysIdState", state.toString())
+			),
+			new SysIdRoutine.Mechanism(voltage -> runVolts(voltage.in(Volts)), null, this)
+		);
+	}
 
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysId.dynamic(direction);
-  }
+	public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return sysId.quasistatic(direction);
+	}
 
-  public Command setPositionCommand(DoubleSupplier leftPosRad, DoubleSupplier rightPosRad) {
-    return run(() -> setPosition(leftPosRad.getAsDouble(), rightPosRad.getAsDouble()));
-  }
+	public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+		return sysId.dynamic(direction);
+	}
 
-  public Command getDefaultCommand() {
-    return setPositionCommand(() -> 0.0, () -> 0.0);
-  }
+	public Command setPositionCommand(DoubleSupplier leftPosRad, DoubleSupplier rightPosRad) {
+		return run(() -> setPosition(leftPosRad.getAsDouble(), rightPosRad.getAsDouble()));
+	}
 
-  public void runVolts(double volts) {
-    io.setVoltage(volts);
-  }
+	public Command getDefaultCommand() {
+		return setPositionCommand(() -> 0.0, () -> 0.0);
+	}
 
-  public void setPosition(double leftPosRads, double rightPosRads) {
-    io.setRotations(leftPosRads, rightPosRads);
-  }
+	public void runVolts(double volts) {
+		io.setVoltage(volts);
+	}
 
-  public void periodic() {
-    io.updateInputs(inputs);
-  }
+	public void setPosition(double leftPosRads, double rightPosRads) {
+		io.setRotations(leftPosRads, rightPosRads);
+	}
+
+	public void periodic() {
+		io.updateInputs(inputs);
+	}
 }

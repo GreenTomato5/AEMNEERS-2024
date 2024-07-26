@@ -12,76 +12,75 @@ import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
-  private ShooterIO io;
-  private SysIdRoutine sysId;
-  private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
+	private ShooterIO io;
+	private SysIdRoutine sysId;
+	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
-  public Shooter(ShooterIO io) {
-    this.io = io;
+	public Shooter(ShooterIO io) {
+		this.io = io;
 
-    // TODO: Tune ff and feedback controllers, these values are MADE UP
-    switch (Constants.currentMode) {
-      case REAL:
-        io.configurePID(1.0, 0, 0);
-        io.configureFeedForward(1, 0, 0);
-        break;
-      case REPLAY:
-        io.configurePID(1.0, 0.0, 0.0);
-        io.configureFeedForward(1, 0, 0);
-        break;
-      case SIM:
-        io.configurePID(0.5, 0.0, 0.0);
-        io.configureFeedForward(1, 0, 0);
-        break;
-      default:
-        break;
-    }
+		// TODO: Tune ff and feedback controllers, these values are MADE UP
+		switch (Constants.currentMode) {
+			case REAL:
+				io.configurePID(1.0, 0, 0);
+				io.configureFeedForward(1, 0, 0);
+				break;
+			case REPLAY:
+				io.configurePID(1.0, 0.0, 0.0);
+				io.configureFeedForward(1, 0, 0);
+				break;
+			case SIM:
+				io.configurePID(0.5, 0.0, 0.0);
+				io.configureFeedForward(1, 0, 0);
+				break;
+			default:
+				break;
+		}
 
-    sysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism((voltage) -> runVolts(voltage.in(Volts)), null, this));
-  }
+		sysId = new SysIdRoutine(
+			new SysIdRoutine.Config(null, null, null, state ->
+				Logger.recordOutput("Shooter/SysIdState", state.toString())
+			),
+			new SysIdRoutine.Mechanism(voltage -> runVolts(voltage.in(Volts)), null, this)
+		);
+	}
 
-  private void runVolts(double volts) {
-    io.setVoltage(volts);
-  }
+	private void runVolts(double volts) {
+		io.setVoltage(volts);
+	}
 
-  public void setSpeed(Double speed) {
-    io.setSpeed(speed);
-  }
+	public void setSpeed(Double speed) {
+		io.setSpeed(speed);
+	}
 
-  public Command setSpeedCommand(DoubleSupplier rps) {
-    return run(() -> setSpeed(rps.getAsDouble()));
-  }
+	public Command setSpeedCommand(DoubleSupplier rps) {
+		return run(() -> setSpeed(rps.getAsDouble()));
+	}
 
-  public Command getDefaultCommand() {
-    return setSpeedCommand(() -> 0.0);
-  }
+	public Command getDefaultCommand() {
+		return setSpeedCommand(() -> 0.0);
+	}
 
-  public boolean nearSpeedPoint() {
-    return io.nearSpeedPoint();
-  }
+	public boolean nearSpeedPoint() {
+		return io.nearSpeedPoint();
+	}
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysId.quasistatic(direction);
-  }
+	public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return sysId.quasistatic(direction);
+	}
 
-  /** Returns a command to run a dynamic test in the specified direction. */
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysId.dynamic(direction);
-  }
+	/** Returns a command to run a dynamic test in the specified direction. */
+	public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+		return sysId.dynamic(direction);
+	}
 
-  @Override
-  public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Shooter", inputs);
-    Logger.recordOutput(
-        "Shooter/Running Command",
-        Optional.ofNullable(this.getCurrentCommand()).map(Command::getName).orElse("None"));
-  }
+	@Override
+	public void periodic() {
+		io.updateInputs(inputs);
+		Logger.processInputs("Shooter", inputs);
+		Logger.recordOutput(
+			"Shooter/Running Command",
+			Optional.ofNullable(this.getCurrentCommand()).map(Command::getName).orElse("None")
+		);
+	}
 }

@@ -5,50 +5,51 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ClimberIOSim implements ClimberIO {
-  private final DCMotorSim climberSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);
 
-  private double leftSetpoint = 0.0;
-  private double rightSetpoint = 0.0;
-  private double appliedVolts = 0.0;
+	private final DCMotorSim climberSim = new DCMotorSim(DCMotor.getFalcon500(1), 1, 0.01);
 
-  private PIDController controller = new PIDController(0, 0, 0);
+	private double leftSetpoint = 0.0;
+	private double rightSetpoint = 0.0;
+	private double appliedVolts = 0.0;
 
-  public void updateInputs(ClimberIOInputs inputs) {
-    inputs.leftClimberAppliedVolts = appliedVolts;
-    inputs.rightClimberAppliedVolts = appliedVolts;
-    inputs.leftClimberSpeed = climberSim.getAngularVelocityRadPerSec();
-    inputs.rightClimberSpeed = climberSim.getAngularVelocityRadPerSec();
-    inputs.leftClimberSetpointRads = leftSetpoint;
-    inputs.rightClimberSetpointRads = rightSetpoint;
-    inputs.leftClimberMeasuredRads = climberSim.getAngularPositionRad();
-    inputs.rightClimberMeasuredRads = climberSim.getAngularPositionRad();
-  }
+	private PIDController controller = new PIDController(0, 0, 0);
 
-  public void setRotations(double leftSetpoint, double rightSetpoint) {
-    // zzz ima just use one of the two for both because im not doing allat with 2 sims
-    appliedVolts = controller.calculate(climberSim.getAngularPositionRad(), leftSetpoint);
-    climberSim.setInputVoltage(appliedVolts);
-  }
+	public void updateInputs(ClimberIOInputs inputs) {
+		inputs.leftClimberAppliedVolts = appliedVolts;
+		inputs.rightClimberAppliedVolts = appliedVolts;
+		inputs.leftClimberSpeed = climberSim.getAngularVelocityRadPerSec();
+		inputs.rightClimberSpeed = climberSim.getAngularVelocityRadPerSec();
+		inputs.leftClimberSetpointRads = leftSetpoint;
+		inputs.rightClimberSetpointRads = rightSetpoint;
+		inputs.leftClimberMeasuredRads = climberSim.getAngularPositionRad();
+		inputs.rightClimberMeasuredRads = climberSim.getAngularPositionRad();
+	}
 
-  public void setVoltage(double volts) {
-    appliedVolts = volts;
-    climberSim.setInputVoltage(volts);
-  }
+	public void setRotations(double leftSetpoint, double rightSetpoint) {
+		// zzz ima just use one of the two for both because im not doing allat with 2 sims
+		appliedVolts = controller.calculate(climberSim.getAngularPositionRad(), leftSetpoint);
+		climberSim.setInputVoltage(appliedVolts);
+	}
 
-  public void stop() {
-    climberSim.setInputVoltage(0);
-  }
+	public void setVoltage(double volts) {
+		appliedVolts = volts;
+		climberSim.setInputVoltage(volts);
+	}
 
-  public void configurePID(double kP, double kI, double kD) {
-    controller.setPID(kP, kI, kD);
-  }
+	public void stop() {
+		climberSim.setInputVoltage(0);
+	}
 
-  // Not doing allat or using this
-  public boolean leftClimberOverCurrentLimit(double currentLimit) {
-    return false;
-  }
+	public void configurePID(double kP, double kI, double kD) {
+		controller.setPID(kP, kI, kD);
+	}
 
-  public boolean rightClimberOverCurrentLimit(double currentLimit) {
-    return false;
-  }
+	// Not doing allat or using this
+	public boolean leftClimberOverCurrentLimit(double currentLimit) {
+		return false;
+	}
+
+	public boolean rightClimberOverCurrentLimit(double currentLimit) {
+		return false;
+	}
 }

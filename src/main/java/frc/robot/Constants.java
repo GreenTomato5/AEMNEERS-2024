@@ -24,45 +24,51 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
+	public static final Mode currentMode = Mode.SIM;
 
-    /** Running a physics simulator. */
-    SIM,
+	public static enum Mode {
+		/** Running on a real robot. */
+		REAL,
 
-    /** Replaying from a log file. */
-    REPLAY
-  }
+		/** Running a physics simulator. */
+		SIM,
 
-  public static final class Pivot {
-    // Radians
-    public static final double OUT = Units.degreesToRadians(180);
-    public static final double IN = 0.0;
-    public static final double THRESHOLD = 0.05;
-    public static final double SIMOFFSET = Units.degreesToRadians(-125);
-  }
+		/** Replaying from a log file. */
+		REPLAY,
+	}
 
-  public static final class Spinner {
-    public static final double ON = 0.8;
-    public static final double FEEDING = -1;
-    public static final double BACKWARDS = -0.3;
-    public static final double THRESHOLD = 0.1;
-  }
+	public static final class Pivot {
 
-  public static final class Shooter {
-    public static final double ON = 10;
-    public static final double THRESHOLD = 0.1;
-  }
+		// Radians
+		public static final double OUT = Units.degreesToRadians(180);
+		public static final double IN = 0.0;
+		public static final double THRESHOLD = 0.05;
+		public static final double SIMOFFSET = Units.degreesToRadians(-125);
+	}
 
-  public static final class Amp {
-    public static final double ON = 2;
-    public static final double OUT = Units.degreesToRadians(120);
-  }
+	public static final class Spinner {
 
-  public static final class Climber {
-    public static final double UP = 100;
-  }
+		public static final double ON = 0.8;
+		public static final double FEEDING = -1;
+		public static final double BACKWARDS = -0.3;
+		public static final double THRESHOLD = 0.1;
+	}
+
+	public static final class Shooter {
+
+		public static final double ON = 10;
+		public static final double THRESHOLD = 0.1;
+	}
+
+	public static final class Amp {
+
+		public static final double ON = 2;
+		public static final double OUT = Units.degreesToRadians(120);
+	}
+
+	public static final class Climber {
+
+		public static final double UP = 100;
+	}
 }
