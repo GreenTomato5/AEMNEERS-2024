@@ -1,0 +1,40 @@
+name: Format Java Code with Prettier
+
+on:
+  push:
+    branches:
+      - main
+      - Auto-Formatting
+  pull_request:
+    branches:
+      - main
+      - Auto-Formatting
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up mid JS framework
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Apply Prettier Formatting
+      run: npx prettier --write "**/*.java"
+
+    - name: Commit changes
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add .
+        git commit -m 'Apply Prettier format' || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -1,0 +1,16 @@
+{
+  "name": "aemneers-2024",
+  "version": "1.0.0",
+  "description": "Command based Advantage Kit advanced swerve template code base",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-java": "^2.6.4"
+  }
+}
