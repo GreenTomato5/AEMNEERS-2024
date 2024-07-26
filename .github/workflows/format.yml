@@ -6,7 +6,7 @@ on:
       - main
   push:
     branches:
-      - Auto-Formatting
+      - main
 
 permissions:
   contents: write
@@ -39,10 +39,6 @@ jobs:
         git diff --exit-code || echo "Changes detected"
       continue-on-error: true
 
-    - name: Print branch name
-      run: |
-       echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-
     - name: Commit changes
       if: steps.git-check.outcome == 'success'
       run: |
@@ -50,7 +46,12 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git add .
         git commit -m 'Apply Prettier format' || echo "No changes to commit"
-        git push origin "$(git rev-parse --abbrev-ref HEAD)"
+        # Determine ref for push based on context
+        if [[ $GITHUB_EVENT_NAME == 'pull_request' ]]; then
+          git push origin "HEAD:refs/heads/${{ github.head_ref }}"
+        else
+          git push origin "HEAD"
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
